@@ -2,6 +2,8 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 import { User } from "../models/User.js";
+import { Entidades } from "../models/entidades.js";
+
 
 dotenv.config();
 
@@ -14,5 +16,5 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: false, // solo desarrollo
   logging: false,                           
-  entities: [User],   // 👈 pasa el EntitySchema
+  entities: [User, Entidades],   // 👈 pasa el EntitySchema
 });

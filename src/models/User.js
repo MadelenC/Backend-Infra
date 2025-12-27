@@ -14,7 +14,6 @@ export const User = new EntitySchema({
     },
     apellidos: {
       type: "varchar",
-      unique: true,
     },
     cedula: {
       type: "varchar",
@@ -30,15 +29,40 @@ export const User = new EntitySchema({
     },
     tipo:{
       type:"varchar",
-      unique: true
     },
     cargo:{
       type:"varchar",
-      unique: true
     },
     password: {
       type: "varchar", 
-      unique: true, // 🔑 campo necesario para login
+      //unique: true, // 🔑 campo necesario para login
+    },
+    insertador: {
+      type: "varchar",
+      default: "NO"
+    },
+    active: {
+      type: "boolean",
+      default: true
+    },
+    // created_at
+    created_at: {
+      type: "timestamp",
+      default: () => "CURRENT_TIMESTAMP",
+    },
+    // updated_at
+    updated_at: {
+      type: "timestamp",
+      default: () => "CURRENT_TIMESTAMP",
+    },
+  },
+
+
+  relations: {
+    entidades: {
+      type: "one-to-many",
+      target: "Entidades",
+      inverseSide: "user",
     },
   },
 });
