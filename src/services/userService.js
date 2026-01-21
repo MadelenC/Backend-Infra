@@ -51,7 +51,6 @@ export const createUser = async (data) => {
 };
 
 
-
 export const updateUser = async (id, data) => {
   const user = await userRepository.findOne({
     where: { id },

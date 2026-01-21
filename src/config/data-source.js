@@ -3,6 +3,10 @@ import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 import { User } from "../models/User.js";
 import { Entidades } from "../models/entidades.js";
+import { Roles } from "../models/rolTravel.js";
+import { Vehiculos } from "../models/vehicle.js";
+import { destinos } from "../models/destino.js";
+import { Mapas } from "../models/mapas.js";
 
 
 dotenv.config();
@@ -16,5 +20,5 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: false, // solo desarrollo
   logging: false,                           
-  entities: [User, Entidades],   // 👈 pasa el EntitySchema
+  entities: [User, Entidades, Roles, Vehiculos, destinos, Mapas ],   // 👈 pasa el EntitySchema
 });

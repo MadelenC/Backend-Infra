@@ -4,7 +4,10 @@
   import userRoutes from "./routes/userRoutes.js";
   import authRoutes from "./routes/authRoutes.js"; 
   import entidadesRoutes from "./routes/entidadesRoutes.js";
-
+  import rolTravelRoutes from "./routes/rolTravelRoutes.js";
+  import vehicleRoutes from "./routes/vehicleRoutes.js";
+  import destinoRoutes from "./routes/destinoRoutes.js";
+  import mapasRoutes from "./routes/mapasRoutes.js"
 
   dotenv.config();
 
@@ -22,7 +25,10 @@
   app.use("/api/users", userRoutes);
   app.use("/api/auth", authRoutes); 
   app.use("/api/entidades", entidadesRoutes);
-
+  app.use("/api/rolTravel", rolTravelRoutes);
+  app.use("/api/vehicle", vehicleRoutes); 
+  app.use("/api/destino", destinoRoutes);
+  app.use("/api/mapas", mapasRoutes)
 
 
 

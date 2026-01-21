@@ -1,30 +1,35 @@
 import { EntitySchema } from "typeorm";
 
-export const Entidades = new EntitySchema({
-  name: "Entidades", 
-  tableName: "entidades", 
+export const Roles = new EntitySchema({
+  name: "rolTravel", 
+  tableName: "roles", 
   columns: {
     id: {
       type: "int",
       primary: true,
       generated: true,
     },
-    facultad: {
+    tipoa: {
       type: "varchar",
       nullable: false,
     },
-    carrera: {
-      type: "varchar",
-      nullable: false,
-      //unique: true,
-    },
-    materia: {
+    tipob: {
       type: "varchar",
       nullable: false,
       //unique: true,
     },
-    sigla: {
+    tipoc: {
       type: "varchar",
+      nullable: false,
+      //unique: true,
+    },
+    fecha: {
+      type: "date",
+      nullable: false,
+      //unique: true,
+    },
+    cantidad: {
+      type: "int",
       nullable: false,
       //unique: true,
     },
@@ -42,10 +47,9 @@ export const Entidades = new EntitySchema({
       type: "many-to-one",
       target: "User",
       joinColumn: {
-        name: "user_id", 
+        name: "chofer_id", // indica la columna que ya existe en la tabla
       },
       nullable: false,
     },
   },
 });
-

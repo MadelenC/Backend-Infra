@@ -1,33 +1,34 @@
 import { EntitySchema } from "typeorm";
 
-export const Entidades = new EntitySchema({
-  name: "Entidades", 
-  tableName: "entidades", 
+export const  Mapas = new EntitySchema({
+  name: "Mapas", 
+  tableName: "mapas", 
   columns: {
     id: {
       type: "int",
       primary: true,
       generated: true,
     },
-    facultad: {
+    titulo: {
       type: "varchar",
       nullable: false,
     },
-    carrera: {
-      type: "varchar",
-      nullable: false,
-      //unique: true,
-    },
-    materia: {
+    lat: {
       type: "varchar",
       nullable: false,
       //unique: true,
     },
-    sigla: {
+    lng: {
       type: "varchar",
       nullable: false,
       //unique: true,
     },
+    insertador: {
+      type: "varchar",
+      nullable: false,
+      //unique: true,
+    },
+  
     created_at: {
       type: "timestamp",
       default: () => "CURRENT_TIMESTAMP",
@@ -40,12 +41,11 @@ export const Entidades = new EntitySchema({
    relations: {
     user: {
       type: "many-to-one",
-      target: "User",
+      target: "destinos",
       joinColumn: {
-        name: "user_id", 
+        name: "destino_id", 
       },
       nullable: false,
     },
   },
 });
-

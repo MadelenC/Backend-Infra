@@ -1,32 +1,40 @@
 import { EntitySchema } from "typeorm";
 
-export const Entidades = new EntitySchema({
-  name: "Entidades", 
-  tableName: "entidades", 
+export const Vehiculos = new EntitySchema({
+  name: "Vehiculos", 
+  tableName: "vehiculos", 
   columns: {
     id: {
       type: "int",
       primary: true,
       generated: true,
     },
-    facultad: {
+    codigo: {
       type: "varchar",
       nullable: false,
     },
-    carrera: {
+    placa: {
+      type: "int",
+      nullable: false,
+      //unique: true,
+    },
+    color: {
       type: "varchar",
       nullable: false,
       //unique: true,
     },
-    materia: {
+    pasajeros: {
       type: "varchar",
       nullable: false,
       //unique: true,
     },
-    sigla: {
-      type: "varchar",
-      nullable: false,
-      //unique: true,
+    tipog:{
+      type:"varchar",
+      nullable: false
+    },
+    estado:{
+      type:"varchar",
+      nullable: false
     },
     created_at: {
       type: "timestamp",
@@ -36,16 +44,9 @@ export const Entidades = new EntitySchema({
       type: "timestamp",
       default: () => "CURRENT_TIMESTAMP",
     },
-  },
-   relations: {
-    user: {
-      type: "many-to-one",
-      target: "User",
-      joinColumn: {
-        name: "user_id", 
-      },
-      nullable: false,
+    combustible:{
+      type:"varchar",
+      nullable: false
     },
   },
 });
-
