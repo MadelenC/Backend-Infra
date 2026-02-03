@@ -8,6 +8,7 @@
   import vehicleRoutes from "./routes/vehicleRoutes.js";
   import destinoRoutes from "./routes/destinoRoutes.js";
   import mapasRoutes from "./routes/mapasRoutes.js"
+  import modelosRoutes from "./routes/modelsRoutes.js"
 
   dotenv.config();
 
@@ -29,6 +30,7 @@
   app.use("/api/vehicle", vehicleRoutes); 
   app.use("/api/destino", destinoRoutes);
   app.use("/api/mapas", mapasRoutes)
+  app.use("/api/modelos", modelosRoutes)
 
 
 

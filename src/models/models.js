@@ -1,37 +1,25 @@
 import { EntitySchema } from "typeorm";
 
-export const Roles = new EntitySchema({
-  name: "rolTravel", 
-  tableName: "roles", 
+export const Modelos = new EntitySchema({
+  name: "Modelos",
+  tableName: "modelos",
   columns: {
     id: {
       type: "int",
       primary: true,
       generated: true,
     },
-    tipoa: {
+    modelo: {
       type: "varchar",
       nullable: false,
     },
-    tipob: {
+    tipoe: {
       type: "varchar",
       nullable: false,
-      //unique: true,
     },
-    tipoc: {
+    kilometraje: {
       type: "varchar",
       nullable: false,
-      //unique: true,
-    },
-    fecha: {
-      type: "date",
-      nullable: false,
-      //unique: true,
-    },
-    cantidad: {
-      type: "int",
-      nullable: false,
-      //unique: true,
     },
     created_at: {
       type: "timestamp",
@@ -42,14 +30,14 @@ export const Roles = new EntitySchema({
       default: () => "CURRENT_TIMESTAMP",
     },
   },
-   relations: {
-    user: {
+  relations: {
+    vehiculo: {
       type: "many-to-one",
-      target: "User",
+      target: "Vehiculos",
       joinColumn: {
-        name: "chofer_id", 
+        name: "vehiculo_id"
       },
-      nullable: false,
-    },
-  },
+      nullable: false
+    }
+  }
 });

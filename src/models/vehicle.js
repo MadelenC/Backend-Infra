@@ -49,4 +49,11 @@ export const Vehiculos = new EntitySchema({
       nullable: false
     },
   },
+  relations:{
+      modelos: {
+        type: "one-to-many",
+        target: "Modelos",
+        inverseSide:"vehiculos"
+      }
+    }
 });

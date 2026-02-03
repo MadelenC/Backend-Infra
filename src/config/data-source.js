@@ -7,6 +7,7 @@ import { Roles } from "../models/rolTravel.js";
 import { Vehiculos } from "../models/vehicle.js";
 import { destinos } from "../models/destino.js";
 import { Mapas } from "../models/mapas.js";
+import {Modelos} from "../models/models.js"
 
 
 dotenv.config();
@@ -20,5 +21,5 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: false, // solo desarrollo
   logging: false,                           
-  entities: [User, Entidades, Roles, Vehiculos, destinos, Mapas ],   // 👈 pasa el EntitySchema
+  entities: [User, Entidades, Roles, Vehiculos, destinos, Mapas, Modelos ],   // 👈 pasa el EntitySchema
 });
