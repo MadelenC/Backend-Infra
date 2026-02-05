@@ -18,7 +18,7 @@ export const Modelos = new EntitySchema({
       nullable: false,
     },
     kilometraje: {
-      type: "varchar",
+      type: "double precision",
       nullable: false,
     },
     created_at: {
