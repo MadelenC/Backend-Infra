@@ -21,7 +21,7 @@ export const getModeloById = async (id) => {
 
 // Crear un nuevo modelo
 export const createModelo = async (data) => {
-  // 1️⃣ buscar el vehículo
+  
   const vehiculo = await vehicleRepository.findOneBy({
     id: data.vehiculo_id,
   });
@@ -30,12 +30,12 @@ export const createModelo = async (data) => {
     throw new Error("Vehículo no existe");
   }
 
-  // 2️⃣ crear el modelo con la RELACIÓN
+  //  crear el modelo con la RELACIÓN
   const newModelo = modelosRepository.create({
     modelo: data.modelo,
     tipoe: data.tipoe,
     kilometraje: data.kilometraje,
-    vehiculo: vehiculo, // 👈 ESTA ES LA CLAVE
+    vehiculo: vehiculo, 
     created_at: new Date(),
     updated_at: new Date(),
   });

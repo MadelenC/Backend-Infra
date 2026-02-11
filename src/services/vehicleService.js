@@ -2,7 +2,9 @@ import { vehicleRepository } from "../repositories/vehicleRepository.js";
 
 export const getAllVehicles = async () => {
   // Trae todos los vehículos
-  return await vehicleRepository.find();
+  return await vehicleRepository.find({
+    relations: ["modelos"],  
+  });
 };
 
 export const getVehicleById = async (id) => {

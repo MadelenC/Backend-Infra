@@ -9,13 +9,13 @@
   import destinoRoutes from "./routes/destinoRoutes.js";
   import mapasRoutes from "./routes/mapasRoutes.js"
   import modelosRoutes from "./routes/modelsRoutes.js"
+  import marcasRoutes from "./routes/marcsRoutes.js"
 
   dotenv.config();
 
   const app = express();
   app.use(express.json());
 
-  //Middleare CORS
   app.use(cors({
     origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -29,9 +29,9 @@
   app.use("/api/rolTravel", rolTravelRoutes);
   app.use("/api/vehicle", vehicleRoutes); 
   app.use("/api/destino", destinoRoutes);
-  app.use("/api/mapas", mapasRoutes)
-  app.use("/api/modelos", modelosRoutes)
-
+  app.use("/api/mapas", mapasRoutes);
+  app.use("/api/modelos", modelosRoutes);
+  app.use("/api/marcas", marcasRoutes)
 
 
   export default app;
