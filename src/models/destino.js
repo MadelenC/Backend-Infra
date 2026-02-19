@@ -54,4 +54,13 @@ export const destinos = new EntitySchema({
     },
   },
   
+  relations: {
+    mapa: {
+      type: "one-to-one",     
+      target: "mapas",
+      inverseSide: "user", 
+      cascade: true,          
+      eager: true,            
+    },
+  },
 });

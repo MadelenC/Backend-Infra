@@ -40,12 +40,13 @@ export const  Mapas = new EntitySchema({
   },
    relations: {
     user: {
-      type: "many-to-one",
+      type: "one-to-one",
       target: "destinos",
       joinColumn: {
         name: "destino_id", 
       },
       nullable: false,
+      eager:false,
     },
   },
 });
