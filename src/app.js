@@ -10,6 +10,7 @@
   import mapasRoutes from "./routes/mapasRoutes.js"
   import modelosRoutes from "./routes/modelsRoutes.js"
   import marcasRoutes from "./routes/marcsRoutes.js"
+  import reservaRoutes from "./routes/reservasRoutes.js"
 
   dotenv.config();
 
@@ -31,7 +32,8 @@
   app.use("/api/destino", destinoRoutes);
   app.use("/api/mapas", mapasRoutes);
   app.use("/api/modelos", modelosRoutes);
-  app.use("/api/marcas", marcasRoutes)
+  app.use("/api/marcas", marcasRoutes);
+  app.use("/api/reservas",reservaRoutes)
 
 
   export default app;
