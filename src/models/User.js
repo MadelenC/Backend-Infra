@@ -64,5 +64,10 @@ export const User = new EntitySchema({
       target: "Entidades",
       inverseSide: "user",
     },
+    reservas:{
+      type:"one-to-many",
+      target:"Entidades",
+      inverseSide:"user",
+    }
   },
 });
