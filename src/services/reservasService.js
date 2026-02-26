@@ -1,6 +1,5 @@
 import { reservasRepository } from "../repositories/reservasRepository.js";
-import { userRepository } from "../repositories/userRepository.js"; // asegúrate de tener esto
-
+import { userRepository } from "../repositories/userRepository.js"; 
 // Obtener todas las reservas (opcional: con usuario)
 export const getAllReservas = async () => {
   return await reservasRepository.find({ relations: ["user"] });

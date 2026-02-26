@@ -9,7 +9,9 @@ import { destinos } from "../models/destino.js";
 import { Mapas } from "../models/mapas.js";
 import {Modelos} from "../models/models.js";
 import {Marcas} from "../models/marcs.js";
-import {Reservas} from "../models/reservas.js"
+import {Reservas} from "../models/reservas.js";
+import{Viajes} from "../models/travel.js"
+import { Rutas } from "../models/routes.js";
 
 
 dotenv.config();
@@ -23,5 +25,15 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: false, 
   logging: false,                           
-  entities: [User, Entidades, Roles, Vehiculos, destinos, Mapas, Modelos, Marcas, Reservas],   
+  entities: [User, 
+    Entidades, 
+    Roles, 
+    Vehiculos, 
+    destinos, 
+    Mapas, 
+    Modelos, 
+    Marcas, 
+    Reservas,
+    Viajes,
+    Rutas],   
 });

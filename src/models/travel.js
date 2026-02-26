@@ -1,8 +1,8 @@
 import { EntitySchema, JoinColumn } from "typeorm";
 
-export const Reservas = new EntitySchema({
-  name: "Reservas", 
-  tableName: "reservas", 
+export const Viajes = new EntitySchema({
+  name: "Viajes", 
+  tableName: "viajes", 
   columns: {
     id: {
       type: "int",
@@ -14,6 +14,11 @@ export const Reservas = new EntitySchema({
       nullable: false,
     },
     objetivo: {
+      type: "varchar",
+      nullable: false,
+      //unique: true,
+    },
+    dias: {
       type: "varchar",
       nullable: false,
       //unique: true,
@@ -33,10 +38,9 @@ export const Reservas = new EntitySchema({
       nullable: false,
       //unique: true,
     },
-    dias: {
-      type: "varchar",
+    estado:{
+      type:"varchar",
       nullable: false,
-      //unique: true,
     },
     
     created_at: {
@@ -48,19 +52,15 @@ export const Reservas = new EntitySchema({
       default: () => "CURRENT_TIMESTAMP",
     },
   },
-  relations: {
-    user:{
-      type: "many-to-one",
-      target:"User",
+   relations: {
+    reserva: {
+      type: "many-to-one",        
+      target: "Reservas",         
       joinColumn: {
-        name: "user_id", 
+        name: "reserva_id",       
       },
-      nullable:false,
+      nullable: true,             
+     // cascade: false,             
     },
-    viajes: {
-    type: "one-to-many",
-    target: "Viajes",
-    inverseSide: "reserva",
   },
-  }
 });
