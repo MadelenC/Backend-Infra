@@ -1,10 +1,7 @@
 import { rolTravelRepository } from "../repositories/rolTravelRepository.js";
 
 export const getAllRolTravel = async () => {
-  // Trae todos los roles de viaje con el chofer asociado
-  return await rolTravelRepository.find({
-    relations: ["user"], // incluye info del chofer
-  });
+  return await rolTravelRepository.find({ relations: ["user"] });
 };
 
 export const getRolTravelById = async (id) => {
@@ -18,15 +15,16 @@ export const getRolTravelById = async (id) => {
 };
 
 export const createRolTravel = async (data) => {
-  // Creamos el rol de viaje directo, sin crear usuario
+  if (!data.chofer_id) throw new Error("Debe enviar chofer_id");
+
   const rolAdd = {
-    tipoa: data.tipoa,
-    tipob: data.tipob,
-    tipoc: data.tipoc,
-    fecha: data.fecha,
-    cantidad: data.cantidad,
-    user: { id: data.chofer_id }, // asignamos el chofer existente
-    created_at: new Date(),
+    tipoa: data.tipoa || "",
+    tipob: data.tipob || "",
+    tipoc: data.tipoc || "",
+    fecha: data.fecha || new Date().toISOString(),
+    cantidad: data.cantidad || 1,
+    user: { id: data.chofer_id }, 
+    created_at:new Date(),
     updated_at: new Date(),
   };
 
@@ -44,6 +42,7 @@ export const updateRolTravel = async (id, data) => {
     tipoc: data.tipoc,
     fecha: data.fecha,
     cantidad: data.cantidad,
+    created_at:new Date(),
     updated_at: new Date(),
   });
 

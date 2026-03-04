@@ -44,7 +44,7 @@ export const Entidades = new EntitySchema({
       joinColumn: {
         name: "user_id", 
       },
-      nullable: false,
+      nullable: true,
     },
   },
 });
