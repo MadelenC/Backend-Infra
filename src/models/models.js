@@ -38,6 +38,11 @@ export const Modelos = new EntitySchema({
         name: "vehiculo_id"
       },
       nullable: false
+    },
+     marcas: {              
+      type: "one-to-many",
+      target: "Marcas",
+      inverseSide: "modelo"
     }
   }
 });

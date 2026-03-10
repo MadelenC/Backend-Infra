@@ -58,10 +58,10 @@ export const updateUser = async (id, data) => {
   });
   if (!user) throw { status: 404, message: "Usuario no encontrado" };
 
-  // 1️⃣ Actualizar campos simples
+  // 1️ Actualizar campos simples
   userRepository.merge(user, data);
 
-  // 2️⃣ Actualizar entidades relacionadas
+  // 2️ Actualizar entidades relacionadas
   if (data.entidades && Array.isArray(data.entidades)) {
     user.entidades = await Promise.all(
       data.entidades.map(async (eData) => {
