@@ -12,6 +12,7 @@ import {Marcas} from "../models/marcs.js";
 import {Reservas} from "../models/reservas.js";
 import{Viajes} from "../models/travel.js"
 import { Rutas } from "../models/routes.js";
+import{ departures} from "../models/departures.js"
 
 
 dotenv.config();
@@ -35,5 +36,6 @@ export const AppDataSource = new DataSource({
     Marcas, 
     Reservas,
     Viajes,
-    Rutas],   
+    Rutas,
+    departures],   
 });
