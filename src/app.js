@@ -14,6 +14,7 @@
   import travelRoutes from "./routes/travelRoutes.js"
   import routesRoutes from "./routes/routesRoutes.js"
   import departuresRoutes from "./routes/departuresRoutes.js"
+  import budgetsRoutes from "./routes/budgetsRoutes.js"
 
   dotenv.config();
 
@@ -40,6 +41,7 @@
   app.use("/api/viajes", travelRoutes);
   app.use("/api/rutas", routesRoutes);
   app.use("/api/salidas", departuresRoutes);
+  app.use("/api/presupuestos", budgetsRoutes);
 
 
   export default app;

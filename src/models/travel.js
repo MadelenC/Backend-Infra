@@ -9,6 +9,10 @@ export const Viajes = new EntitySchema({
       primary: true,
       generated: true,
     },
+     tipo: {
+      type: "varchar",
+      nullable: false,
+    },
     entidad: {
       type: "varchar",
       nullable: false,
@@ -29,12 +33,12 @@ export const Viajes = new EntitySchema({
       //unique: true,
     },
     fecha_inicial: {
-      type: "varchar",
+      type: "date",
       nullable: false,
       //unique: true,
     },
     fecha_final: {
-      type: "varchar",
+      type: "date",
       nullable: false,
       //unique: true,
     },
@@ -59,8 +63,13 @@ export const Viajes = new EntitySchema({
       joinColumn: {
         name: "reserva_id",       
       },
-      nullable: true,             
-     // cascade: false,             
+      nullable: true,                         
+    },
+    // Relación inversa a presupuestos
+    presupuestos: {
+      type: "one-to-many",
+      target: "Presupuestos",
+      inverseSide: "viaje",
     },
   },
 });
