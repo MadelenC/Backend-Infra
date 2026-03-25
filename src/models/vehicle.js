@@ -54,6 +54,7 @@ export const Vehiculos = new EntitySchema({
         type: "one-to-many",
         target: "Modelos",
         inverseSide:"vehiculo"
-      }
+      },
+      
     }
 });
