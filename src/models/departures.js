@@ -39,7 +39,6 @@ export const departures = new EntitySchema({
     updated_at: {
       type: "timestamp",
       default: () => "CURRENT_TIMESTAMP",
-      onUpdate: "CURRENT_TIMESTAMP",
     },
   },
   relations: {
