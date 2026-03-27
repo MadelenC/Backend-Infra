@@ -68,6 +68,11 @@ export const User = new EntitySchema({
       type:"one-to-many",
       target:"Entidades",
       inverseSide:"user",
+    },
+    maintenances: {
+      type: "one-to-many",
+      target: "Maintenance",
+      inverseSide: "user",
     }
   },
 });

@@ -18,6 +18,8 @@
   import tripsReportRoutes from "./routes/tripReportRoutes.js"
   import applicationRoutes from "./routes/applicationRoutes.js"
   import accessoriesRoutes from "./routes/accesoriesRoutes.js"
+  import maintenanceRoutes from "./routes/maintenanceRoutes.js"
+  import institutionRoutes from "./routes/institutionRoutes.js"
   dotenv.config();
 
   const app = express();
@@ -47,4 +49,6 @@
   app.use("/api/informe_viajes", tripsReportRoutes);
   app.use("/api/solicitudes",applicationRoutes);
   app.use("/api/accesorios",accessoriesRoutes);
+  app.use("/api/mantenimiento",maintenanceRoutes);
+  app.use("/api/institucion",institutionRoutes);
   export default app;
