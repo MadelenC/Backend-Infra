@@ -19,6 +19,8 @@ import { application } from "../models/Application.js";
 import { Accessories } from "../models/Accessories.js";
 import { Maintenance } from "../models/Maintenance.js";
 import { Institution } from "../models/Institution.js";
+import{Mechanics } from "../models/Mechanics.js";
+import {Returns} from "../models/Returns.js";
 
 dotenv.config();
 
@@ -49,5 +51,7 @@ export const AppDataSource = new DataSource({
     Accessories,
     Maintenance,
     Institution,
+    Mechanics,
+    Returns,
   ],   
 });
