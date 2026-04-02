@@ -4,7 +4,7 @@ import { mechanicsRepository } from "../repositories/mechanicsRepository.js";
 // Get all mechanics
 export const getAllMechanics = async () => {
   return await mechanicsRepository.find({
-    relations: ["solicitud","solicitud.vehiculo"], // include related solicitud
+    relations: ["solicitud","solicitud.vehiculo"], 
   });
 };
 

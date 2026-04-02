@@ -47,6 +47,11 @@ export const application = new EntitySchema({
       target: "Accessories",
       inverseSide: "solicitud",
       },
+      peticiones: {
+      type: "one-to-many",
+      target: "Requests",
+      inverseSide: "solicitud",
+      },
   
     },
 });

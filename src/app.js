@@ -22,6 +22,7 @@
   import institutionRoutes from "./routes/institutionRoutes.js"
   import mechanicsRoutes from "./routes/mechanicsRoutes.js"
   import returnsRoutes from "./routes/retunrsRoutes.js"
+  import requestRoutes from "./routes/requestRoutes.js"
   dotenv.config();
 
   const app = express();
@@ -54,5 +55,6 @@
   app.use("/api/mantenimiento",maintenanceRoutes);
   app.use("/api/institucion",institutionRoutes);
    app.use("/api/mecanicos",mechanicsRoutes);
-  app.use("/api/devoluciones",returnsRoutes)
+  app.use("/api/devoluciones",returnsRoutes);
+  app.use("/api/peticiones",requestRoutes);
   export default app;
