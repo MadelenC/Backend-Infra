@@ -1,38 +1,32 @@
 import { EntitySchema } from "typeorm";
 
-export const Roles = new EntitySchema({
-  name: "rolTravel", 
-  tableName: "roles", 
+export const Exceptions = new EntitySchema({
+  name: "Exceptions",
+  tableName: "excepciones",
+
   columns: {
     id: {
       type: "int",
       primary: true,
       generated: true,
     },
-    tipoa: {
+     chofer_id: {
+      type: "int",
+      nullable: false,
+    },
+    tipo: {
       type: "varchar",
       nullable: false,
     },
-    tipob: {
+    lugar: {
       type: "varchar",
       nullable: false,
-      //unique: true,
-    },
-    tipoc: {
-      type: "varchar",
-      nullable: false,
-      //unique: true,
     },
     fecha: {
       type: "date",
       nullable: false,
-      //unique: true,
     },
-    cantidad: {
-      type: "int",
-      nullable: false,
-      //unique: true,
-    },
+   
     created_at: {
       type: "timestamp",
       default: () => "CURRENT_TIMESTAMP",
@@ -42,20 +36,16 @@ export const Roles = new EntitySchema({
       default: () => "CURRENT_TIMESTAMP",
     },
   },
-   relations: {
-    user: {
+
+  relations: {
+    rol: {
       type: "many-to-one",
-      target: "User",
+      target: "rolTravel",
       joinColumn: {
-        name: "chofer_id", 
+        name: "roles_id",
       },
       nullable: false,
-    },
-    exceptions: {
-      type: "one-to-many",         
-      target: "Exceptions",        
-      inverseSide: "rol",         
-      cascade: true,               
+      eager: true,
     },
   },
 });

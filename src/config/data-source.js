@@ -22,6 +22,7 @@ import { Institution } from "../models/Institution.js";
 import{Mechanics } from "../models/Mechanics.js";
 import {Returns} from "../models/Returns.js";
 import {Requests} from "../models/Requests.js"
+import { Exceptions } from "../models/Exceptions.js";
 
 dotenv.config();
 
@@ -55,5 +56,6 @@ export const AppDataSource = new DataSource({
     Mechanics,
     Returns,
     Requests,
+    Exceptions,
   ],   
 });

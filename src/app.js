@@ -23,6 +23,7 @@
   import mechanicsRoutes from "./routes/mechanicsRoutes.js"
   import returnsRoutes from "./routes/retunrsRoutes.js"
   import requestRoutes from "./routes/requestRoutes.js"
+  import exceptionsRoutes from "./routes/exceptionsRoutes.js"
   dotenv.config();
 
   const app = express();
@@ -57,4 +58,5 @@
    app.use("/api/mecanicos",mechanicsRoutes);
   app.use("/api/devoluciones",returnsRoutes);
   app.use("/api/peticiones",requestRoutes);
+  app.use("/api/excepciones",exceptionsRoutes);
   export default app;

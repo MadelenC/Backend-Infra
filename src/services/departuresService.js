@@ -2,14 +2,14 @@ import { departuresRepository } from "../repositories/departuresRepository.js";
 import { vehicleRepository } from "../repositories/vehicleRepository.js";
 import { userRepository } from "../repositories/userRepository.js";
 
-// 🔹 Traer todas las salidas con relaciones
+
 export const getAllSalidas = async () => {
   return await departuresRepository.find({
     relations: ["vehiculo", "chofer"],
   });
 };
 
-// 🔹 Traer por ID
+
 export const getSalidaById = async (id) => {
   const salida = await departuresRepository.findOne({
     where: { id },
@@ -20,12 +20,12 @@ export const getSalidaById = async (id) => {
   return salida;
 };
 
-// 🔹 Crear salida
+
 export const createSalida = async (data) => {
   try {
     console.log("📩 DATA RECIBIDA:", data);
 
-    // 🔍 Buscar vehículo
+    // Buscar vehículo
     const vehiculo = await vehicleRepository.findOne({
       where: { id: Number(data.vehiculo) },
     });
@@ -36,7 +36,7 @@ export const createSalida = async (data) => {
       throw new Error(`Vehículo con ID ${data.vehiculo} no existe`);
     }
 
-    // 🔍 Buscar chofer
+    //  Buscar chofer
     const chofer = await userRepository.findOne({
       where: { id: Number(data.chofer) },
     });
@@ -47,7 +47,7 @@ export const createSalida = async (data) => {
       throw new Error(`Chofer con ID ${data.chofer} no existe`);
     }
 
-    // 🔧 Crear salida
+    //  Crear salida
     const nuevaSalida = departuresRepository.create({
       lugar: data.lugar,
       motivo: data.motivo,
@@ -72,7 +72,7 @@ export const createSalida = async (data) => {
   }
 };
 
-// 🔹 Actualizar salida
+// Actualizar salida
 export const updateSalida = async (id, data) => {
   try {
     const salida = await departuresRepository.findOne({

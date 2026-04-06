@@ -1,13 +1,13 @@
 import { rolTravelRepository } from "../repositories/rolTravelRepository.js";
 
 export const getAllRolTravel = async () => {
-  return await rolTravelRepository.find({ relations: ["user"] });
+  return await rolTravelRepository.find({ relations: ["user", "exceptions"] });
 };
 
 export const getRolTravelById = async (id) => {
   const rol = await rolTravelRepository.findOne({
     where: { id },
-    relations: ["user"],
+    relations: ["user", "exceptions"],
   });
 
   if (!rol) throw new Error("Rol de viaje no encontrado");
