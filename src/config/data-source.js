@@ -35,6 +35,10 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: false, 
   logging: false,                           
+  poolSize:10,
+  extra:{
+    max:10
+  },
   entities: [User, 
     Entidades, 
     Roles, 

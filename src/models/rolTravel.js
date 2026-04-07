@@ -55,7 +55,7 @@ export const Roles = new EntitySchema({
       type: "one-to-many",         
       target: "Exceptions",        
       inverseSide: "rol",         
-      cascade: true,               
+      cascade: true,             
     },
   },
 });
