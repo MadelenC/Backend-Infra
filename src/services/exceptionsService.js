@@ -1,7 +1,9 @@
 // src/services/exceptionsService.js
-import { exceptionsRepository } from "../repositories/exceptionsRepository.js";
 
-// 🔹 Traer todas las excepciones con relación
+import { exceptionsRepository } from "../repositories/exceptionsRepository.js";
+import { rolTravelRepository } from "../repositories/rolTravelRepository.js";
+
+// 🔹 Traer todas
 export const getAllExceptions = async () => {
   return await exceptionsRepository.find({
     relations: ["rol"],
@@ -19,13 +21,12 @@ export const getExceptionById = async (id) => {
   return exception;
 };
 
-// 🔹 Crear excepción
 export const createException = async (data) => {
   try {
     console.log("📩 DATA RECIBIDA:", data);
 
-    // 🔍 Validar rol (FK real)
-    const rol = await rolesRepository.findOne({
+    // Buscar rolTravel (FK)
+    const rol = await rolTravelRepository.findOne({
       where: { id: Number(data.rol_id) },
     });
 
@@ -37,7 +38,7 @@ export const createException = async (data) => {
 
     // 🔧 Crear excepción
     const nueva = exceptionsRepository.create({
-      chofer_id: data.chofer_id, // ⚠️ solo número
+      chofer_id: Number(data.chofer_id),
       tipo: data.tipo,
       lugar: data.lugar,
       fecha: data.fecha,
@@ -58,7 +59,7 @@ export const createException = async (data) => {
   }
 };
 
-// 🔹 Actualizar excepción
+// 🔹 Actualizar
 export const updateException = async (id, data) => {
   try {
     const exception = await exceptionsRepository.findOne({
@@ -68,9 +69,9 @@ export const updateException = async (id, data) => {
 
     if (!exception) throw new Error("Excepción no encontrada");
 
-    // 🔄 Actualizar rol si viene
+    // 🔄 actualizar rol
     if (data.rol_id) {
-      const rol = await rolesRepository.findOne({
+      const rol = await rolTravelRepository.findOne({
         where: { id: Number(data.rol_id) },
       });
 
@@ -81,7 +82,7 @@ export const updateException = async (id, data) => {
       exception.rol = rol;
     }
 
-    // 🔄 Campos normales
+    // 🔄 campos
     exception.chofer_id = data.chofer_id ?? exception.chofer_id;
     exception.tipo = data.tipo ?? exception.tipo;
     exception.lugar = data.lugar ?? exception.lugar;
@@ -89,11 +90,7 @@ export const updateException = async (id, data) => {
 
     exception.updated_at = new Date();
 
-    const actualizado = await exceptionsRepository.save(exception);
-
-    console.log("🔄 EXCEPCIÓN ACTUALIZADA:", actualizado);
-
-    return actualizado;
+    return await exceptionsRepository.save(exception);
 
   } catch (error) {
     console.error("❌ ERROR EN updateException:", error.message);
@@ -101,7 +98,7 @@ export const updateException = async (id, data) => {
   }
 };
 
-// 🔹 Eliminar excepción
+// 🔹 Eliminar
 export const deleteException = async (id) => {
   const exception = await exceptionsRepository.findOne({
     where: { id },
