@@ -20,12 +20,20 @@ export const getReservaById = async (req, res) => {
   }
 };
 
+
 // Crear nueva reserva
 export const createReserva = async (req, res) => {
   try {
+    console.log("Payload recibido en backend:", req.body);
+
+    // <-- CORRECCIÓN: convertir user_id y pasajeros a números
+    req.body.user_id = parseInt(req.body.user_id);
+    req.body.pasajeros = parseInt(req.body.pasajeros);
+
     const nuevaReserva = await reservasService.createReserva(req.body);
     res.status(201).json(nuevaReserva);
   } catch (err) {
+    console.error("Error al crear reserva:", err);
     res.status(500).json({ error: err.message });
   }
 };

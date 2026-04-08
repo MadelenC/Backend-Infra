@@ -19,22 +19,22 @@ export const Reservas = new EntitySchema({
       //unique: true,
     },
     pasajeros: {
-      type: "varchar",
+      type: "int",
       nullable: false,
       //unique: true,
     },
     fecha_inicial: {
-      type: "varchar",
+      type: "date",
       nullable: false,
       //unique: true,
     },
     fecha_final: {
-      type: "varchar",
+      type: "date",
       nullable: false,
       //unique: true,
     },
     dias: {
-      type: "varchar",
+      type: "int",
       nullable: false,
       //unique: true,
     },
