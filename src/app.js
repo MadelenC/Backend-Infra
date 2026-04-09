@@ -24,6 +24,8 @@
   import returnsRoutes from "./routes/retunrsRoutes.js"
   import requestRoutes from "./routes/requestRoutes.js"
   import exceptionsRoutes from "./routes/exceptionsRoutes.js"
+  import user_travelRoutes   from "./routes/user_travelRoutes.js";
+  import vehicle_travelRoutes from "./routes/vehicle_travelRoutes.js"
   dotenv.config();
 
   const app = express();
@@ -59,4 +61,6 @@
   app.use("/api/devoluciones",returnsRoutes);
   app.use("/api/peticiones",requestRoutes);
   app.use("/api/excepciones",exceptionsRoutes);
+  app.use("/api/userviaje",user_travelRoutes );
+  app.use("/api/vehicletravel",vehicle_travelRoutes)
   export default app;

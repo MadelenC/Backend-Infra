@@ -21,8 +21,10 @@ import { Maintenance } from "../models/Maintenance.js";
 import { Institution } from "../models/Institution.js";
 import{Mechanics } from "../models/Mechanics.js";
 import {Returns} from "../models/Returns.js";
-import {Requests} from "../models/Requests.js"
+import {Requests} from "../models/Requests.js";
 import { Exceptions } from "../models/Exceptions.js";
+import {UserTravel} from "../models/User_travel.js";
+import { VehicleTravel } from "../models/vehicle_travel.js";
 
 dotenv.config();
 
@@ -61,5 +63,7 @@ export const AppDataSource = new DataSource({
     Returns,
     Requests,
     Exceptions,
+    UserTravel,
+    VehicleTravel,
   ],   
 });
