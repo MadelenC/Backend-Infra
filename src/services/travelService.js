@@ -3,16 +3,10 @@ import { destinoViajeRepository } from "../repositories/destino_viajeRepository.
 import { vehicleTravelRepository } from "../repositories/vehicle_travelRepository.js";
 import { userTravelRepository } from "../repositories/user_travelRepository.js";
 
-// ---------------------------
-// GET ALL VIAJES
-// ---------------------------
 export const getAllViajes = async () => {
   return await viajesRepository.find();
 };
 
-// ---------------------------
-// GET VIAJE BY ID
-// ---------------------------
 export const getViajeById = async (id) => {
   const viaje = await viajesRepository.findOneBy({ id });
 
@@ -21,11 +15,19 @@ export const getViajeById = async (id) => {
   return viaje;
 };
 
-// ---------------------------
-// CREATE FULL VIAJE
-// ---------------------------
+/* ================================
+   🔥 DEBUG CONEXIÓN
+================================ */
+console.log("🧠 CONEXIÓN ACTIVA:");
+console.log("DB:", viajesRepository.manager.connection.options.database);
+console.log("HOST:", viajesRepository.manager.connection.options.host);
+
+
 export const createFullViaje = async (data) => {
   try {
+    console.log("📥 DATA RECIBIDA:", data);
+
+    
     const nuevoViaje = viajesRepository.create({
       tipo: data.tipo,
       entidad: data.entidad,
@@ -40,48 +42,68 @@ export const createFullViaje = async (data) => {
     });
 
     const viajeGuardado = await viajesRepository.save(nuevoViaje);
+    console.log("🚗 VIAJE GUARDADO:", viajeGuardado);
 
-    // ---------------- destinos ----------------
+   
     if (Array.isArray(data.destinos)) {
       for (const d of data.destinos) {
-        await destinoViajeRepository.save({
-          viaje: viajeGuardado,
-          destino_id: d.id || d.destino_id,
-          km: d.km || null,
-        });
+        try {
+          const result = await destinoViajeRepository.save({
+            viaje: viajeGuardado,
+            destino: { id: d.id || d.destino_id },
+            created_at: new Date(),
+            updated_at: new Date(),
+          });
+
+          console.log("✅ DESTINO INSERTADO:", result);
+        } catch (err) {
+          console.error("❌ ERROR DESTINO:", err);
+        }
       }
     }
 
-    // ---------------- vehiculos ----------------
+    
     if (Array.isArray(data.vehiculos)) {
       for (const v of data.vehiculos) {
-        await vehicleTravelRepository.save({
-          viaje: viajeGuardado,
-          vehicle_id: v.id,
-        });
+        try {
+          const result = await vehicleTravelRepository.save({
+            viaje: viajeGuardado,
+            vehiculo: { id: v.id },
+          });
+
+          console.log("✅ VEHICULO INSERTADO:", result);
+        } catch (err) {
+          console.error("❌ ERROR VEHICULO:", err);
+        }
       }
     }
 
-    // ---------------- usuarios ----------------
+    
     if (Array.isArray(data.usuarios)) {
       for (const u of data.usuarios) {
-        await userTravelRepository.save({
-          viaje: viajeGuardado,
-          user_id: u.id,
-        });
+        try {
+          const result = await userTravelRepository.save({
+            viaje: viajeGuardado,
+            user: { id: u.id },
+          });
+
+          console.log("✅ USUARIO INSERTADO:", result);
+        } catch (err) {
+          console.error("❌ ERROR USUARIO:", err);
+        }
       }
     }
 
+    console.log("🎉 VIAJE COMPLETO FINALIZADO");
     return viajeGuardado;
+
   } catch (error) {
-    console.error("Error al crear viaje completo:", error);
+    console.error("❌ ERROR GENERAL:", error);
     throw new Error("No se pudo crear el viaje completo");
   }
 };
 
-// ---------------------------
-// UPDATE FULL VIAJE
-// ---------------------------
+
 export const updateFullViaje = async (id, data) => {
   const viaje = await viajesRepository.findOneBy({ id });
 
@@ -92,23 +114,15 @@ export const updateFullViaje = async (id, data) => {
     updated_at: new Date(),
   });
 
-  const viajeActualizado = await viajesRepository.save(viaje);
-
-  // 🔥 IMPORTANTE:
-  // Aquí NO borramos ni usamos relations porque NO existen en Viajes
-
-  return viajeActualizado;
+  return await viajesRepository.save(viaje);
 };
 
-// ---------------------------
-// DELETE FULL VIAJE
-// ---------------------------
+
 export const deleteFullViaje = async (id) => {
   const viaje = await viajesRepository.findOneBy({ id });
 
   if (!viaje) throw new Error("Viaje no encontrado");
 
-  // eliminar relaciones manualmente
   await destinoViajeRepository.delete({ viaje: { id } });
   await vehicleTravelRepository.delete({ viaje: { id } });
   await userTravelRepository.delete({ viaje: { id } });

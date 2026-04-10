@@ -5,7 +5,7 @@ import { User } from "../models/User.js";
 import { Entidades } from "../models/entidades.js";
 import { Roles } from "../models/rolTravel.js";
 import { Vehiculos } from "../models/vehicle.js";
-import { destinos } from "../models/Destino.js";
+import { destinos } from "../models/destino.js";
 import { Mapas } from "../models/mapas.js";
 import {Modelos} from "../models/models.js";
 import {Marcas} from "../models/marcs.js";
