@@ -25,6 +25,7 @@ import {Requests} from "../models/Requests.js";
 import { Exceptions } from "../models/Exceptions.js";
 import {UserTravel} from "../models/User_travel.js";
 import { VehicleTravel } from "../models/vehicle_travel.js";
+import { DestinoViaje } from "../models/Destino_viaje.js";
 
 dotenv.config();
 
@@ -65,5 +66,6 @@ export const AppDataSource = new DataSource({
     Exceptions,
     UserTravel,
     VehicleTravel,
+    DestinoViaje,
   ],   
 });

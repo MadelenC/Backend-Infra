@@ -27,7 +27,7 @@ export const DestinoViaje = new EntitySchema({
         name: "destino_id",
       },
       nullable: false,
-      eager: true,
+      
     },
 
     viaje: {
@@ -37,7 +37,7 @@ export const DestinoViaje = new EntitySchema({
         name: "viaje_id",
       },
       nullable: false,
-      eager: true,
+      
     },
   },
 }); 

@@ -1,6 +1,6 @@
 import * as viajesService from "../services/travelService.js";
 
-// Obtener todos los viajes
+// --- Listar todos los viajes ---
 export const getViajes = async (req, res) => {
   try {
     const viajes = await viajesService.getAllViajes();
@@ -10,7 +10,7 @@ export const getViajes = async (req, res) => {
   }
 };
 
-// Obtener viaje por ID
+// --- Obtener viaje por ID ---
 export const getViajeById = async (req, res) => {
   try {
     const viaje = await viajesService.getViajeById(parseInt(req.params.id));
@@ -20,36 +20,34 @@ export const getViajeById = async (req, res) => {
   }
 };
 
-// Crear nuevo viaje
-export const createViaje = async (req, res) => {
+// --- Crear viaje completo ---
+export const createFullViaje = async (req, res) => {
   try {
-    const nuevoViaje = await viajesService.createViaje(req.body);
+    const nuevoViaje = await viajesService.createFullViaje(req.body);
     res.status(201).json(nuevoViaje);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ error: err.message });
   }
 };
 
-// Actualizar viaje existente
-export const updateViaje = async (req, res) => {
+// --- Actualizar viaje completo ---
+export const updateFullViaje = async (req, res) => {
   try {
-    const updated = await viajesService.updateViaje(
+    const updated = await viajesService.updateFullViaje(
       parseInt(req.params.id),
       req.body
     );
-    if (!updated) return res.status(404).json({ error: "Viaje no encontrado" });
     res.json(updated);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ error: err.message });
   }
 };
 
-// Eliminar viaje
-export const deleteViaje = async (req, res) => {
+// --- Eliminar viaje completo ---
+export const deleteFullViaje = async (req, res) => {
   try {
-    const deleted = await viajesService.deleteViaje(parseInt(req.params.id));
-    if (!deleted) return res.status(404).json({ error: "Viaje no encontrado" });
-    res.json({ message: "Viaje eliminado" });
+    const deleted = await viajesService.deleteFullViaje(parseInt(req.params.id));
+    res.json({ message: "Viaje completo eliminado", deleted });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
