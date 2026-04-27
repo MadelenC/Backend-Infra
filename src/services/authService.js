@@ -35,7 +35,7 @@ export const authService = {
     if (!user) throw new Error('Invalid Ci or password');
 
 
-
+    //no valido
     // console.log("USER COMPLETO DESDE BD:", JSON.stringify(user, null, 2));
 
 
@@ -58,7 +58,7 @@ export const authService = {
     //   validPassword=password===user.password;
     // }
     // console.log("RESULTADO DE COMPARE:", validPassword); //vnkjgf
-
+    //novalido
     const token = jwt.sign({ id: user.id, cedula: user.cedula }, SECRET_KEY, {
       expiresIn: '1h',
     });
@@ -66,6 +66,27 @@ export const authService = {
     const { password: _, ...userWithoutPassword } = user;
     return { user: userWithoutPassword, token };
   },
+  //prueba de que algunas contraseñas no funcionan
+  //login: async ({ cedula, password }) => {
+
+  //console.log("CEDULA RECIBIDA:", `"${cedula}"`);
+
+  // DEBUG: ver TODOS los usuarios
+  //const all = await userRepository.find();
+  //console.log("CEDULAS EN BD:", all.map(u => u.cedula));
+
+  //const user = await userRepository.findOneBy({ cedula });
+
+  //console.log("USER ENCONTRADO:", user);
+
+  //if (!user) throw new Error('Invalid Ci or password');
+
+  //const isMatch = await bcrypt.compare(password, user.password);
+
+  //if (!isMatch) throw new Error('Invalid Ci or password');
+
+  //return user;
+//},
 
   getByCi: async (ci) => {
     const user = await userRepository.findOneBy({ cedula: ci });
