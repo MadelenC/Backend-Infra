@@ -8,16 +8,81 @@ export const getAllViajes = async () => {
 };
 
 export const getViajeById = async (id) => {
-  const viaje = await viajesRepository.findOneBy({ id });
+  const viaje = await viajesRepository.findOne({
+    where: { id },
+    relations: ["reserva"],
+  });
 
   if (!viaje) throw new Error("Viaje no encontrado");
 
-  return viaje;
+  const [destinos, vehiculos, usuarios] = await Promise.all([
+    destinoViajeRepository.find({
+      where: { viaje: { id } },
+      relations: ["destino"],
+    }),
+
+    vehicleTravelRepository.find({
+      where: { viaje: { id } },
+      relations: ["vehiculo"],
+    }),
+
+    userTravelRepository.find({
+      where: { viaje: { id } },
+      relations: ["user"],
+    }),
+  ]);
+
+  const reserva = viaje.reserva;
+
+  return {
+    id: viaje.id,
+    tipo: viaje.tipo,
+    estado: viaje.estado,
+
+    // reserva
+    entidad: reserva?.entidad,
+    objetivo: reserva?.objetivo,
+    pasajeros: reserva?.pasajeros,
+    dias: reserva?.dias,
+    fecha_inicial: reserva?.fecha_inicial,
+    fecha_final: reserva?.fecha_final,
+
+    // relaciones
+    destinos: destinos.map(d => ({
+      id: d.destino.id,
+      origen: d.destino.origen,
+      destino: d.destino.destino,
+      ruta: d.destino.ruta,
+      kilometraje: d.destino.kilometraje,
+    })),
+
+    vehiculos: vehiculos.map(v => ({
+      id: v.vehiculo.id,
+      tipo: v.vehiculo.tipog,
+      placa: v.vehiculo.placa,
+    })),
+
+    choferes: usuarios
+      .filter(u => u.user.tipo === "chofer")
+      .map(u => ({
+        id: u.user.id,
+        nombres: u.user.nombres,
+        apellidos: u.user.apellidos,
+        celular: u.user.celular,
+      })),
+
+    encargados: usuarios
+      .filter(u => u.user.tipo === "encargado")
+      .map(u => ({
+        id: u.user.id,
+        nombres: u.user.nombres,
+        apellidos: u.user.apellidos,
+        celular: u.user.celular,
+      })),
+  };
 };
 
-/* ================================
-   🔥 DEBUG CONEXIÓN
-================================ */
+
 console.log("🧠 CONEXIÓN ACTIVA:");
 console.log("DB:", viajesRepository.manager.connection.options.database);
 console.log("HOST:", viajesRepository.manager.connection.options.host);

@@ -2,14 +2,14 @@ import { userRepository } from "../repositories/userRepository.js";
 import { entidadesRepository } from "../repositories/entidadesRepository.js";
 import bcrypt from "bcrypt";
 
-// 📌 GET ALL USERS
+// GET ALL USERS
 export const getAllUsers = async () => {
   return await userRepository.find({
     relations: ["entidades"],
   });
 };
 
-// 📌 GET USER BY ID
+// GET USER BY ID
 export const getUserById = async (id) => {
   return await userRepository.findOne({
     where: { id },
@@ -17,7 +17,7 @@ export const getUserById = async (id) => {
   });
 };
 
-// 📌 CREATE USER (SEGURIDAD + INSERTADOR)
+// CREATE USER (SEGURIDAD + INSERTADOR)
 export const createUser = async (data) => {
   try {
     const payload = { ...data };
@@ -26,7 +26,7 @@ export const createUser = async (data) => {
     if (!payload.email) delete payload.email;
     if (!payload.cargo) delete payload.cargo;
 
-    // 🔐 ENCRIPTAR PASSWORD
+    // ENCRIPTAR PASSWORD
     const hashedPassword = await bcrypt.hash(payload.password, 10);
 
     const userAdd = {
@@ -37,10 +37,10 @@ export const createUser = async (data) => {
       email: payload.email,
       tipo: payload.tipo,
 
-      // 🔥 viene del frontend (usuario logueado)
+      // viene del frontend (usuario logueado)
       insertador: payload.insertador || "DESCONOCIDO",
 
-      // 🔐 password cifrada ($2b$10$...)
+      //  password cifrada ($2b$10$...)
       password: hashedPassword,
 
       cargo: payload.cargo,
@@ -64,7 +64,7 @@ export const createUser = async (data) => {
   }
 };
 
-// 📌 UPDATE USER
+//  UPDATE USER
 export const updateUser = async (id, data) => {
   const user = await userRepository.findOne({
     where: { id },
@@ -75,7 +75,7 @@ export const updateUser = async (id, data) => {
 
   userRepository.merge(user, data);
 
-  // 🔄 actualizar entidades
+  // actualizar entidades
   if (data.entidades && Array.isArray(data.entidades)) {
     user.entidades = await Promise.all(
       data.entidades.map(async (eData) => {
@@ -118,7 +118,7 @@ export const updateUser = async (id, data) => {
   }
 };
 
-// 📌 DELETE USER
+// DELETE USER
 export const deleteUser = async (id) => {
   const user = await userRepository.findOne({
     where: { id },
