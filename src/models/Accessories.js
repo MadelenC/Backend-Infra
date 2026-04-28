@@ -11,7 +11,7 @@ export const Accessories = new EntitySchema({
       generated: true,
     },
 
-    solicitud: {
+    solicitud1: {
       type: "varchar",
       nullable: false,
     },
