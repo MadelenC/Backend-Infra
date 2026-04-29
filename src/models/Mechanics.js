@@ -90,6 +90,11 @@ export const Mechanics = new EntitySchema({
       nullable: false,
       
     },
+    devoluciones: {
+      type: "one-to-many",
+      target: "Returns",
+      inverseSide: "mecanico",
+    }
   },
 });
 

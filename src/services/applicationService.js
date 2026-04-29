@@ -27,7 +27,6 @@ export const createApplication = async (data) => {
 
     if (!vehiculo) throw new Error("Vehículo no encontrado");
 
-    // 1. Crear solicitud
     const nueva = applicationRepository.create({
       chofer: data.chofer,
       descripsoli: data.descripsoli,
@@ -37,7 +36,7 @@ export const createApplication = async (data) => {
 
     const saved = await applicationRepository.save(nueva);
 
-    // 2. MULTI ACCESORIOS (🔥 aquí está el cambio)
+   
     if (Array.isArray(data.accesorio_ids)) {
       for (const id of data.accesorio_ids) {
         const accesorio = await accessoriesRepository.findOneBy({ id });
@@ -64,7 +63,7 @@ export const updateApplication = async (id, data) => {
 
   if (!application) throw new Error("Solicitud no encontrada");
 
-  // vehículo
+
   if (data.vehiculo_id) {
     const vehiculo = await vehicleRepository.findOneBy({
       id: data.vehiculo_id,
@@ -75,7 +74,7 @@ export const updateApplication = async (id, data) => {
     application.vehiculo = vehiculo;
   }
 
-  // 🔥 accesorios múltiples
+
   if (Array.isArray(data.accesorio_ids)) {
     for (const idAcc of data.accesorio_ids) {
       const accesorio = await accessoriesRepository.findOneBy({ id: idAcc });

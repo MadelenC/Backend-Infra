@@ -2,14 +2,14 @@ import { returnsRepository } from "../repositories/returnsRepository.js";
 
 export const getAllReturns = async () => {
   return await returnsRepository.find({
-    relations: ["mecanico"],
+    relations: ["mecanico","mecanico.solicitud", "mecanico.solicitud.vehiculo"],
   });
 };
 
 export const getReturnById = async (id) => {
   const ret = await returnsRepository.findOne({
     where: { id },
-    relations: ["mecanico"],
+    relations: ["mecanico","mecanico.solicitud", "mecanico.solicitud.vehiculo"],
   });
 
   if (!ret) throw new Error("Return not found");
@@ -30,6 +30,7 @@ export const createReturn = async (data) => {
   });
 
   return await returnsRepository.save(newReturn);
+  
 };
 
 export const updateReturn = async (id, data) => {

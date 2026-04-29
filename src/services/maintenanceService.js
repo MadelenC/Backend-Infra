@@ -39,7 +39,7 @@ export const createMaintenance = async (data) => {
     cumplido: data.cumplido,
     id_nro: data.id_nro,
 
-    // relaciones (IMPORTANTE)
+   
     user: data.user_id ? { id: data.user_id } : null,
     institucion: data.institucion_id ? { id: data.institucion_id } : null,
   });

@@ -4,22 +4,22 @@ import { mechanicsRepository } from "../repositories/mechanicsRepository.js";
 // Get all mechanics
 export const getAllMechanics = async () => {
   return await mechanicsRepository.find({
-    relations: ["solicitud","solicitud.vehiculo"], 
+    relations: ["solicitud","solicitud.vehiculo", "devoluciones"], 
   });
 };
 
-// Get mechanic by ID
+
 export const getMechanicById = async (id) => {
   const mechanic = await mechanicsRepository.findOne({
     where: { id },
-    relations: ["solicitud","solicitud.vehiculo"],
+    relations: ["solicitud","solicitud.vehiculo","devoluciones"],
   });
 
   if (!mechanic) throw new Error("Mechanic not found");
   return mechanic;
 };
 
-// Create mechanic
+
 export const createMechanic = async (data) => {
   const newMechanic = mechanicsRepository.create({
     fecha: data.fecha,
@@ -37,7 +37,7 @@ export const createMechanic = async (data) => {
   return await mechanicsRepository.save(newMechanic);
 };
 
-// Update mechanic
+
 export const updateMechanic = async (id, data) => {
   const mechanic = await mechanicsRepository.findOneBy({ id });
 
@@ -47,7 +47,7 @@ export const updateMechanic = async (id, data) => {
   return await mechanicsRepository.save(mechanic);
 };
 
-// Delete mechanic
+
 export const deleteMechanic = async (id) => {
   const mechanic = await mechanicsRepository.findOneBy({ id });
 
