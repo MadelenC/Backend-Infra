@@ -11,7 +11,7 @@ export const application = new EntitySchema({
     },
     chofer: {
       type: "varchar",
-      nullable: false,
+      nullable: true,
     },
     descripsoli: {
       type: "varchar",
@@ -20,17 +20,17 @@ export const application = new EntitySchema({
     },
     fecha: {
       type: "date",
-      nullable: false,
+      nullable: true,
       //unique: true,
     },
     
     created_at: {
       type: "timestamp",
-      default: () => "CURRENT_TIMESTAMP",
+      createDate: true,
     },
     updated_at: {
       type: "timestamp",
-      default: () => "CURRENT_TIMESTAMP",
+      updateDate: true,
     },
   },
    relations: {
@@ -55,3 +55,4 @@ export const application = new EntitySchema({
   
     },
 });
+//treu a chofer y fecha por que hay un boton editar y eso ingresara esos datos , pero para probar 

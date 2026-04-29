@@ -24,7 +24,9 @@ export const createReturn = async (data) => {
     cantidad: data.cantidad,
     detalle: data.detalle,
     insertador: data.insertador,
-    mecanico_id: data.mecanico_id,
+     mecanico: { id: data.mecanico_id },
+     created_at: new Date(),
+    updated_at: new Date(),
   });
 
   return await returnsRepository.save(newReturn);

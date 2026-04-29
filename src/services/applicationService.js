@@ -27,21 +27,29 @@ export const createApplication = async (data) => {
 
     if (!vehiculo) throw new Error("Vehículo no encontrado");
 
-    const accesorio = await accessoriesRepository.findOneBy({
-      id: data.accesorio_id,
-    });
-
-    if (!accesorio) throw new Error("Accesorio no encontrado");
-
+    // 1. Crear solicitud
     const nueva = applicationRepository.create({
       chofer: data.chofer,
       descripsoli: data.descripsoli,
       fecha: data.fecha,
       vehiculo,
-      accesorios: [accesorio],
     });
 
-    return await applicationRepository.save(nueva);
+    const saved = await applicationRepository.save(nueva);
+
+    // 2. MULTI ACCESORIOS (🔥 aquí está el cambio)
+    if (Array.isArray(data.accesorio_ids)) {
+      for (const id of data.accesorio_ids) {
+        const accesorio = await accessoriesRepository.findOneBy({ id });
+
+        if (!accesorio) continue;
+
+        accesorio.solicitud = saved;
+        await accessoriesRepository.save(accesorio);
+      }
+    }
+
+    return saved;
 
   } catch (error) {
     console.error("🔥 ERROR EN CREATE APPLICATION:", error);
@@ -56,6 +64,7 @@ export const updateApplication = async (id, data) => {
 
   if (!application) throw new Error("Solicitud no encontrada");
 
+  // vehículo
   if (data.vehiculo_id) {
     const vehiculo = await vehicleRepository.findOneBy({
       id: data.vehiculo_id,
@@ -66,14 +75,16 @@ export const updateApplication = async (id, data) => {
     application.vehiculo = vehiculo;
   }
 
-  if (data.accesorio_id) {
-    const accesorio = await accesoriesRepository.findOneBy({
-      id: data.accesorio_id,
-    });
+  // 🔥 accesorios múltiples
+  if (Array.isArray(data.accesorio_ids)) {
+    for (const idAcc of data.accesorio_ids) {
+      const accesorio = await accessoriesRepository.findOneBy({ id: idAcc });
 
-    if (!accesorio) throw new Error("Accesorio no encontrado");
+      if (!accesorio) continue;
 
-    application.accesorios = [accesorio];
+      accesorio.solicitud = application;
+      await accessoriesRepository.save(accesorio);
+    }
   }
 
   application.chofer = data.chofer ?? application.chofer;
@@ -82,7 +93,6 @@ export const updateApplication = async (id, data) => {
 
   return await applicationRepository.save(application);
 };
-
 export const deleteApplication = async (id) => {
   const application = await applicationRepository.findOneBy({ id });
 

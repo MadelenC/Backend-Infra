@@ -3,10 +3,37 @@ import { entidadesRepository } from "../repositories/entidadesRepository.js";
 import bcrypt from "bcrypt";
 
 // GET ALL USERS
-export const getAllUsers = async () => {
-  return await userRepository.find({
-    relations: ["entidades"],
-  });
+export const getAllUsers = async ({ page, limit, search, role }) => {
+  const query = userRepository.createQueryBuilder("user")
+    .leftJoinAndSelect("user.entidades", "entidades");
+
+  // 🔎 SEARCH
+  if (search) {
+    query.andWhere(
+      `(LOWER(user.nombres) LIKE :search 
+        OR LOWER(user.apellidos) LIKE :search
+        OR user.cedula LIKE :search
+        OR user.celular LIKE :search)`,
+      { search: `%${search.toLowerCase()}%` }
+    );
+  }
+
+  // 🎭 ROLE FILTER
+  if (role) {
+    query.andWhere("user.tipo = :role", { role });
+  }
+
+  // 📄 PAGINACIÓN
+  query.skip((page - 1) * limit);
+  query.take(limit);
+
+  const [data, total] = await query.getManyAndCount();
+
+  return {
+    data,
+    totalPages: Math.ceil(total / limit),
+    total,
+  };
 };
 
 // GET USER BY ID
