@@ -4,10 +4,11 @@ import bcrypt from "bcrypt";
 
 // GET ALL USERS
 export const getAllUsers = async ({ page, limit, search, role }) => {
-  const query = userRepository.createQueryBuilder("user")
+  const query = userRepository
+    .createQueryBuilder("user")
     .leftJoinAndSelect("user.entidades", "entidades");
 
-  // 🔎 SEARCH
+
   if (search) {
     query.andWhere(
       `(LOWER(user.nombres) LIKE :search 
@@ -18,24 +19,36 @@ export const getAllUsers = async ({ page, limit, search, role }) => {
     );
   }
 
-  // 🎭 ROLE FILTER
+  
   if (role) {
     query.andWhere("user.tipo = :role", { role });
   }
 
-  // 📄 PAGINACIÓN
   query.skip((page - 1) * limit);
   query.take(limit);
 
   const [data, total] = await query.getManyAndCount();
 
+  
+  const cleaned = data.map((u) => ({
+    id: u.id,
+    nombres: u.nombres,
+    apellidos: u.apellidos,
+    tipo: u.tipo,
+
+    
+    entidades: u.entidades?.map(e => ({
+      id: e.id,
+      nombre: e.nombre,
+    })),
+  }));
+
   return {
-    data,
-    totalPages: Math.ceil(total / limit),
+    data: cleaned,
     total,
+    totalPages: Math.ceil(total / limit),
   };
 };
-
 // GET USER BY ID
 export const getUserById = async (id) => {
   return await userRepository.findOne({
@@ -64,10 +77,10 @@ export const createUser = async (data) => {
       email: payload.email,
       tipo: payload.tipo,
 
-      // viene del frontend (usuario logueado)
+      
       insertador: payload.insertador || "DESCONOCIDO",
 
-      //  password cifrada ($2b$10$...)
+      
       password: hashedPassword,
 
       cargo: payload.cargo,

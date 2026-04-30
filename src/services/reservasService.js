@@ -2,19 +2,33 @@ import { reservasRepository } from "../repositories/reservasRepository.js";
 import { userRepository } from "../repositories/userRepository.js";
 
 // Obtener todas las reservas
-export const getAllReservas = async () => {
-  return await reservasRepository.find({
-    relations: {
-      user: true,
-      viajes: true,
-    },
-    order: {
-      id: "DESC",
-    },
-  });
-};
+export const getAllReservas = async ({ page, limit, estado }) => {
+  const query = reservasRepository
+    .createQueryBuilder("r")
+    .leftJoin("r.user", "user")
+    .addSelect([
+      "user.id",
+      "user.nombres",
+      "user.apellidos",
+      "user.cargo",
+    ])
+    .leftJoinAndSelect("r.viajes", "viajes")
+    .orderBy("r.id", "DESC");
 
-// Obtener reserva por ID
+  if (estado) {
+    query.andWhere("r.estado = :estado", { estado });
+  }
+
+  query.skip((page - 1) * limit).take(limit);
+
+  const [data, total] = await query.getManyAndCount();
+
+  return {
+    data,
+    total,
+    totalPages: Math.ceil(total / limit),
+  };
+};
 export const getReservaById = async (id) => {
   const reserva = await reservasRepository.findOne({
     where: { id: Number(id) },
@@ -31,27 +45,24 @@ export const getReservaById = async (id) => {
 // Crear nueva reserva
 export const createReserva = async (data) => {
   try {
-    // 🔹 Buscar usuario correctamente desde data
+   
     const user = await userRepository.findOne({
       where: { id: Number(data.user_id) },
     });
 
     if (!user) throw new Error("Usuario no encontrado");
 
-    // 🔹 Convertir fechas a Date
+   
     const fechaInicio = new Date(data.fecha_inicial);
     const fechaFin = new Date(data.fecha_final);
 
-    // 🚨 Validar fechas
     if (fechaFin < fechaInicio) throw new Error("La fecha final no puede ser menor que la inicial");
 
-    // 📅 Calcular días
+   
     let dias = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24));
     if (dias <= 0) dias = 1;
 
-    // 🔹 Convertir pasajeros a string si tu entidad lo requiere
     const pasajeros = String(data.pasajeros);
-
     const nuevaReserva = reservasRepository.create({
       entidad: data.entidad,
       objetivo: data.objetivo,
@@ -71,13 +82,11 @@ export const createReserva = async (data) => {
   }
 };
 
-// Actualizar reserva
 export const updateReserva = async (id, data) => {
   try {
     const reserva = await reservasRepository.findOne({ where: { id: Number(id) } });
     if (!reserva) throw new Error("Reserva no encontrada");
 
-    // Actualizar fechas si vienen en el payload
     if (data.fecha_inicial && data.fecha_final) {
       const fechaInicio = new Date(data.fecha_inicial);
       const fechaFin = new Date(data.fecha_final);
@@ -86,7 +95,7 @@ export const updateReserva = async (id, data) => {
       data.dias = String(dias);
     }
 
-    // 🔹 Asegurar que pasajeros sea string
+  
     if (data.pasajeros !== undefined) data.pasajeros = String(data.pasajeros);
 
     reservasRepository.merge(reserva, data);
@@ -97,7 +106,7 @@ export const updateReserva = async (id, data) => {
   }
 };
 
-// Eliminar reserva
+
 export const deleteReserva = async (id) => {
   try {
     const reserva = await reservasRepository.findOne({
@@ -114,7 +123,7 @@ export const deleteReserva = async (id) => {
   }
 };
 
-// Obtener reservas por usuario
+
 export const getReservasByUser = async (userId) => {
   return await reservasRepository.find({
     where: {

@@ -42,7 +42,7 @@ export const createMapa = async (data) => {
     lat: data.lat,
     lng: data.lng,
     insertador: data.insertador,
-    user: { id: data.user_id }, // usuario existente
+    user: { id: data.user_id }, 
     created_at: new Date(),
     updated_at: new Date(),
   };

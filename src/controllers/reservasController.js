@@ -3,8 +3,15 @@ import * as reservasService from "../services/reservasService.js";
 // Obtener todas las reservas
 export const getReservas = async (req, res) => {
   try {
-    const reservas = await reservasService.getAllReservas();
-    res.json(reservas);
+    const { page = 1, limit = 8, estado } = req.query;
+
+    const data = await reservasService.getAllReservas({
+      page: Number(page),
+      limit: Number(limit),
+      estado,
+    });
+
+    res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

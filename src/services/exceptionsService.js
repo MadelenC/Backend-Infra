@@ -36,7 +36,7 @@ export const createException = async (data) => {
       throw new Error(`Rol con ID ${data.rol_id} no existe`);
     }
 
-    // 🔧 Crear excepción
+
     const nueva = exceptionsRepository.create({
       chofer_id: Number(data.chofer_id),
       tipo: data.tipo,
