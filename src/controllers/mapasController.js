@@ -2,7 +2,14 @@ import * as mapasService from "../services/mapasService.js";
 
 export const getMapas = async (req, res) => {
   try {
-    const data = await mapasService.getAllMapas();
+    const { page, limit, search } = req.query;
+
+    const data = await mapasService.getAllMapas({
+      page: Number(page),
+      limit: Number(limit),
+      search,
+    });
+
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });

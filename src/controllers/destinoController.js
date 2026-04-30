@@ -3,7 +3,15 @@ import * as destinoService from "../services/destinoService.js";
 
 export const getDestinos = async (req, res) => {
   try {
-    const data = await destinoService.getAllDestinos();
+    const { page = 1, limit = 8, departamento, search } = req.query;
+
+    const data = await destinoService.getAllDestinos({
+      page: Number(page),
+      limit: Number(limit),
+      departamento,
+      search,
+    });
+
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });

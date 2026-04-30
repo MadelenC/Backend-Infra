@@ -1,7 +1,20 @@
 import { rolTravelRepository } from "../repositories/rolTravelRepository.js";
 
-export const getAllRolTravel = async () => {
-  return await rolTravelRepository.find({ relations: ["user", "exceptions"] });
+export const getAllRolTravel = async (page, limit) => {
+  const skip = (page - 1) * limit;
+
+  const [data, total] = await rolTravelRepository.findAndCount({
+    relations: ["user", "exceptions"],
+    skip,
+    take: limit,
+    order: { id: "DESC" }
+  });
+
+  return {
+    data,
+    total,
+    totalPages: Math.ceil(total / limit)
+  };
 };
 
 export const getRolTravelById = async (id) => {

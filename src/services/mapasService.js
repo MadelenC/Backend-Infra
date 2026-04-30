@@ -1,9 +1,29 @@
 import { mapasRepository } from "../repositories/mapasRepository.js";
 
-export const getAllMapas = async () => {
-  return await mapasRepository.find({
-    relations: ["user"],
-  });
+export const getAllMapas = async ({ page , limit, search  }) => {
+  const query = mapasRepository
+    .createQueryBuilder("m")
+    .leftJoinAndSelect("m.user", "user")
+    .orderBy("m.id", "DESC");
+
+  // SEARCH (opcional)
+  if (search) {
+    query.andWhere(
+      "m.titulo LIKE :search OR user.destino LIKE :search",
+      { search: `%${search}%` }
+    );
+  }
+
+  // PAGINACIÓN
+  query.skip((page - 1) * limit).take(limit);
+
+  const [data, total] = await query.getManyAndCount();
+
+  return {
+    data,
+    total,
+    totalPages: Math.ceil(total / limit),
+  };
 };
 
 export const getMapaById = async (id) => {

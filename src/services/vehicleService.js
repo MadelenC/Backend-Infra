@@ -2,10 +2,24 @@ import { vehicleRepository } from "../repositories/vehicleRepository.js";
 import { modelosRepository } from "../repositories/modelsRepository.js";
 import { marcasRepository } from "../repositories/marcsRepository.js";
 
-export const getAllVehicles = async () => {
-  return await vehicleRepository.find({
-    relations: ["modelos", "modelos.marcas"], // trae modelos y sus marcas
-  });
+export const getAllVehicles = async ({ page, limit, estado }) => {
+  const query = vehicleRepository
+    .createQueryBuilder("v")
+    .leftJoinAndSelect("v.modelos", "modelos")
+    .leftJoinAndSelect("modelos.marcas", "marcas");
+  if (estado) {
+    query.where("v.estado = :estado", { estado });
+  }
+  query.orderBy("v.id", "DESC");
+  query.skip((page - 1) * limit).take(limit);
+
+  const [data, total] = await query.getManyAndCount();
+
+  return {
+    data,
+    total,
+    totalPages: Math.ceil(total / limit),
+  };
 };
 
 export const getVehicleById = async (id) => {

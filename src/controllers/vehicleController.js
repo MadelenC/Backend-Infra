@@ -3,7 +3,14 @@ import * as vehicleService from "../services/vehicleService.js";
 // Obtener todos los vehículos
 export const getVehicles = async (req, res) => {
   try {
-    const data = await vehicleService.getAllVehicles();
+    const { page = 1, limit = 10, estado } = req.query;
+
+    const data = await vehicleService.getAllVehicles({
+      page: Number(page),
+      limit: Number(limit),
+      estado,
+    });
+
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });

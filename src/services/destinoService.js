@@ -1,7 +1,36 @@
 import { destinoRepository } from "../repositories/destinoRepository.js";
 
-export const getAllDestinos = async () => {
-  return await destinoRepository.find();
+export const getAllDestinos = async ({ page, limit, departamento, search }) => {
+  const query = destinoRepository
+    .createQueryBuilder("d")
+    .orderBy("d.created_at", "DESC");
+
+  // 🔥 FILTRO DEPARTAMENTO (CORREGIDO)
+  if (departamento) {
+   query.andWhere(
+  "(d.dep_inicio = :dep OR d.dep_final = :dep)",
+  { dep: departamento }
+);
+  }
+
+  // 🔥 SEARCH
+  if (search) {
+    query.andWhere(
+      "d.origen LIKE :search OR d.destino LIKE :search OR d.ruta LIKE :search",
+      { search: `%${search}%` }
+    );
+  }
+
+  // 🔥 PAGINACIÓN
+  query.skip((page - 1) * limit).take(limit);
+
+  const [data, total] = await query.getManyAndCount();
+
+  return {
+    data,
+    total,
+    totalPages: Math.ceil(total / limit),
+  };
 };
 
 export const getDestinoById = async (id) => {
@@ -12,7 +41,7 @@ export const getDestinoById = async (id) => {
 
 export const createDestino = async (data) => {
   const nuevo = destinoRepository.create({
-    deb_inicio: data.deb_inicio,
+    dep_inicio: data.dep_inicio,
     origen: data.origen,
     destino: data.destino,
     dep_final: data.dep_final,
