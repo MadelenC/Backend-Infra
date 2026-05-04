@@ -3,14 +3,30 @@ import { destinoViajeRepository } from "../repositories/destino_viajeRepository.
 import { vehicleTravelRepository } from "../repositories/vehicle_travelRepository.js";
 import { userTravelRepository } from "../repositories/user_travelRepository.js";
 
-export const getAllViajes = async () => {
-  return await viajesRepository.find();
+
+export const getAllViajes = async ({ page, limit }) => {
+  const query = viajesRepository
+    .createQueryBuilder("v")
+    .leftJoinAndSelect("v.presupuestos", "presupuestos")
+    .orderBy("v.id", "DESC")
+    .skip((page - 1) * limit)
+    .take(limit);
+
+  const [data, total] = await query.getManyAndCount();
+
+  return {
+    data,
+    total,
+    totalPages: Math.ceil(total / limit),
+  };
 };
 
 export const getViajeById = async (id) => {
+
+
   const viaje = await viajesRepository.findOne({
     where: { id },
-    relations: ["reserva"],
+    relations: ["reserva", "presupuestos"],
   });
 
   if (!viaje) throw new Error("Viaje no encontrado");

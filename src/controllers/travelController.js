@@ -3,8 +3,14 @@ import * as viajesService from "../services/travelService.js";
 // --- Listar todos los viajes ---
 export const getViajes = async (req, res) => {
   try {
-    const viajes = await viajesService.getAllViajes();
-    res.json(viajes);
+    const { page = 1, limit = 8 } = req.query;
+
+    const data = await viajesService.getAllViajes({
+      page: Number(page),
+      limit: Number(limit),
+    });
+
+    res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

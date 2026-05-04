@@ -18,7 +18,7 @@ export const getAllUsers = async ({ page, limit, search, role }) => {
       { search: `%${search.toLowerCase()}%` }
     );
   }
-
+ 
   
   if (role) {
     query.andWhere("user.tipo = :role", { role });
@@ -35,11 +35,21 @@ export const getAllUsers = async ({ page, limit, search, role }) => {
     nombres: u.nombres,
     apellidos: u.apellidos,
     tipo: u.tipo,
+    cedula: u.cedula,
+    celular: u.celular,
+    email: u.email,
+    cargo: u.cargo,
+    insertador: u.insertador,
 
     
     entidades: u.entidades?.map(e => ({
       id: e.id,
-      nombre: e.nombre,
+      sigla: e.sigla,
+      facultad: e.facultad,
+      materia: e.materia,
+      carrera: e.carrera
+
+
     })),
   }));
 
@@ -106,58 +116,104 @@ export const createUser = async (data) => {
 
 //  UPDATE USER
 export const updateUser = async (id, data) => {
-  const user = await userRepository.findOne({
-    where: { id },
-    relations: ["entidades"],
-  });
+  try {
+    console.log("📥 DATA QUE LLEGA:", data);
 
-  if (!user) throw { status: 404, message: "Usuario no encontrado" };
+    const user = await userRepository.findOne({
+      where: { id },
+      relations: ["entidades"],
+    });
 
-  userRepository.merge(user, data);
+    if (!user) {
+      throw { status: 404, message: "Usuario no encontrado" };
+    }
 
-  // actualizar entidades
-  if (data.entidades && Array.isArray(data.entidades)) {
-    user.entidades = await Promise.all(
-      data.entidades.map(async (eData) => {
-        let ent;
+    const { entidades, ...userData } = data;
+
+    console.log("👤 USER DATA:", userData);
+    console.log("🏢 ENTIDADES:", entidades);
+
+    if (!userData.password) {
+      delete userData.password;
+    }
+
+    
+    userRepository.merge(user, userData);
+    await userRepository.save(user);
+
+    
+    if (Array.isArray(entidades)) {
+      for (const eData of entidades) {
+
+        console.log("➡️ PROCESANDO ENTIDAD:", eData);
+
+        let entidad;
 
         if (eData.id) {
-          ent = await entidadesRepository.findOneBy({ id: eData.id });
+          entidad = await entidadesRepository.findOneBy({ id: eData.id });
 
-          if (!ent) {
+          if (!entidad) {
             throw {
               status: 404,
-              message: `Entidad con id ${eData.id} no encontrada`,
+              message: `Entidad ${eData.id} no encontrada`,
             };
           }
 
-          entidadesRepository.merge(ent, eData);
-          await entidadesRepository.save(ent);
+          entidadesRepository.merge(entidad, {
+            ...eData,
+            updated_at: new Date(), 
+          });
+
         } else {
-          ent = entidadesRepository.create({ ...eData, user });
-          await entidadesRepository.save(ent);
+          entidad = entidadesRepository.create({
+            ...eData,
+            user,
+
+            
+            created_at: new Date(),
+            updated_at: new Date(),
+          });
         }
 
-        return ent;
-      })
-    );
-  }
-
-  try {
-    return await userRepository.save(user);
-  } catch (err) {
-    if (err.code === "23505") {
-      const field = err.detail?.match(/\((.+)\)/)?.[1];
-      throw {
-        status: 400,
-        message: `Ya existe un registro con el mismo ${field}`,
-      };
+        console.log("💾 GUARDANDO ENTIDAD...");
+        await entidadesRepository.save(entidad);
+      }
     }
 
-    throw { status: 500, message: "Error al actualizar usuario" };
+    
+    const updatedUser = await userRepository.findOne({
+      where: { id },
+      relations: ["entidades"],
+    });
+
+    console.log("✅ USER FINAL:", updatedUser);
+
+    return {
+      id: updatedUser.id,
+      nombres: updatedUser.nombres,
+      apellidos: updatedUser.apellidos,
+      tipo: updatedUser.tipo,
+      cedula: updatedUser.cedula,
+      celular: updatedUser.celular,
+      email: updatedUser.email,
+      cargo: updatedUser.cargo,
+      insertador: updatedUser.insertador,
+
+      entidades: updatedUser.entidades?.map(e => ({
+        id: e.id,
+        facultad: e.facultad,
+        carrera: e.carrera,
+        materia: e.materia,
+        sigla: e.sigla,
+        
+      })),
+    };
+
+  } catch (err) {
+    console.error("❌ ERROR REAL EN UPDATE:", err);
+    throw err;
   }
 };
-
 // DELETE USER
 export const deleteUser = async (id) => {
   const user = await userRepository.findOne({
