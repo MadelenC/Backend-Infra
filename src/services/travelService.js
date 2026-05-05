@@ -51,51 +51,51 @@ export const getViajeById = async (id) => {
   const reserva = viaje.reserva;
 
   return {
-    id: viaje.id,
-    tipo: viaje.tipo,
-    estado: viaje.estado,
+  id: viaje.id,
+  tipo: viaje.tipo,
+  estado: viaje.estado,
 
-    // reserva
-    entidad: reserva?.entidad,
-    objetivo: reserva?.objetivo,
-    pasajeros: reserva?.pasajeros,
-    dias: reserva?.dias,
-    fecha_inicial: reserva?.fecha_inicial,
-    fecha_final: reserva?.fecha_final,
+ 
+  entidad: viaje.entidad,
+  objetivo: viaje.objetivo,
+  pasajeros: viaje.pasajeros,
+  dias: viaje.dias,
+  fecha_inicial: viaje.fecha_inicial,
+  fecha_final: viaje.fecha_final,
 
-    // relaciones
-    destinos: destinos.map(d => ({
-      id: d.destino.id,
-      origen: d.destino.origen,
-      destino: d.destino.destino,
-      ruta: d.destino.ruta,
-      kilometraje: d.destino.kilometraje,
+  // relaciones
+  destinos: destinos.map(d => ({
+    id: d.destino.id,
+    origen: d.destino.origen,
+    destino: d.destino.destino,
+    ruta: d.destino.ruta,
+    kilometraje: d.destino.kilometraje,
+  })),
+
+  vehiculos: vehiculos.map(v => ({
+    id: v.vehiculo.id,
+    tipo: v.vehiculo.tipog,
+    placa: v.vehiculo.placa,
+  })),
+
+  choferes: usuarios
+    .filter(u => u.user.tipo === "chofer")
+    .map(u => ({
+      id: u.user.id,
+      nombres: u.user.nombres,
+      apellidos: u.user.apellidos,
+      celular: u.user.celular,
     })),
 
-    vehiculos: vehiculos.map(v => ({
-      id: v.vehiculo.id,
-      tipo: v.vehiculo.tipog,
-      placa: v.vehiculo.placa,
+  encargados: usuarios
+    .filter(u => u.user.tipo === "encargado")
+    .map(u => ({
+      id: u.user.id,
+      nombres: u.user.nombres,
+      apellidos: u.user.apellidos,
+      celular: u.user.celular,
     })),
-
-    choferes: usuarios
-      .filter(u => u.user.tipo === "chofer")
-      .map(u => ({
-        id: u.user.id,
-        nombres: u.user.nombres,
-        apellidos: u.user.apellidos,
-        celular: u.user.celular,
-      })),
-
-    encargados: usuarios
-      .filter(u => u.user.tipo === "encargado")
-      .map(u => ({
-        id: u.user.id,
-        nombres: u.user.nombres,
-        apellidos: u.user.apellidos,
-        celular: u.user.celular,
-      })),
-  };
+};
 };
 
 

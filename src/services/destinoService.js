@@ -5,7 +5,7 @@ export const getAllDestinos = async ({ page, limit, departamento, search }) => {
     .createQueryBuilder("d")
     .orderBy("d.created_at", "DESC");
 
-  // 🔥 FILTRO DEPARTAMENTO (CORREGIDO)
+  
   if (departamento) {
    query.andWhere(
   "(d.dep_inicio = :dep OR d.dep_final = :dep)",
@@ -13,7 +13,7 @@ export const getAllDestinos = async ({ page, limit, departamento, search }) => {
 );
   }
 
-  // 🔥 SEARCH
+
   if (search) {
     query.andWhere(
       "d.origen LIKE :search OR d.destino LIKE :search OR d.ruta LIKE :search",
@@ -21,7 +21,7 @@ export const getAllDestinos = async ({ page, limit, departamento, search }) => {
     );
   }
 
-  // 🔥 PAGINACIÓN
+
   query.skip((page - 1) * limit).take(limit);
 
   const [data, total] = await query.getManyAndCount();
