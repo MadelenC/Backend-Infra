@@ -65,11 +65,17 @@ export const Viajes = new EntitySchema({
       },
       nullable: true,                         
     },
-    // Relación inversa a presupuestos
+    
     presupuestos: {
       type: "one-to-many",
       target: "Presupuestos",
       inverseSide: "viaje",
     },
+    rutas:{
+      type:"one-to-many",
+      target:"Rutas",
+      inverseSide:"viaje",
+    }
+    
   },
 });

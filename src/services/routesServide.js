@@ -1,13 +1,19 @@
 import { rutasRepository } from "../repositories/routesRepository.js";
 
-// Obtener todos los registros de rutas
+// Obtener todos los registros de rutas con viaje
 export const getAllRutas = async () => {
-  return await rutasRepository.find();
+  return await rutasRepository.find({
+    relations: ["viaje"],
+  });
 };
 
-// Obtener ruta por ID
+// Obtener ruta por ID con viaje
 export const getRutaById = async (id) => {
-  const ruta = await rutasRepository.findOneBy({ id });
+  const ruta = await rutasRepository.findOne({
+    where: { id },
+    relations: ["viaje"],
+  });
+
   if (!ruta) throw new Error("Ruta no encontrada");
   return ruta;
 };
@@ -23,6 +29,9 @@ export const createRuta = async (data) => {
     k5: data.k5,
     adicional: data.adicional,
     total: data.total,
+
+    // 👇 IMPORTANTE si usas relación
+    viaje: data.viaje_id ? { id: data.viaje_id } : null,
   });
 
   return await rutasRepository.save(nueva);
@@ -30,16 +39,25 @@ export const createRuta = async (data) => {
 
 // Actualizar ruta existente
 export const updateRuta = async (id, data) => {
-  const ruta = await rutasRepository.findOneBy({ id });
+  const ruta = await rutasRepository.findOne({
+    where: { id },
+    relations: ["viaje"],
+  });
+
   if (!ruta) throw new Error("Ruta no encontrada");
 
-  rutasRepository.merge(ruta, data);
+  rutasRepository.merge(ruta, {
+    ...data,
+    viaje: data.viaje_id ? { id: data.viaje_id } : ruta.viaje,
+  });
+
   return await rutasRepository.save(ruta);
 };
 
 // Eliminar ruta
 export const deleteRuta = async (id) => {
   const ruta = await rutasRepository.findOneBy({ id });
+
   if (!ruta) throw new Error("Ruta no encontrada");
 
   return await rutasRepository.remove(ruta);

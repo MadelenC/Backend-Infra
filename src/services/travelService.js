@@ -2,6 +2,7 @@ import { viajesRepository } from "../repositories/travelRepository.js";
 import { destinoViajeRepository } from "../repositories/destino_viajeRepository.js";
 import { vehicleTravelRepository } from "../repositories/vehicle_travelRepository.js";
 import { userTravelRepository } from "../repositories/user_travelRepository.js";
+import { rutasRepository } from "../repositories/routesRepository.js";
 
 
 export const getAllViajes = async ({ page, limit }) => {
@@ -26,12 +27,12 @@ export const getViajeById = async (id) => {
 
   const viaje = await viajesRepository.findOne({
     where: { id },
-    relations: ["reserva", "presupuestos"],
+    relations: ["reserva", "presupuestos","rutas"],
   });
 
   if (!viaje) throw new Error("Viaje no encontrado");
 
-  const [destinos, vehiculos, usuarios] = await Promise.all([
+  const [destinos, vehiculos, usuarios,rutas] = await Promise.all([
     destinoViajeRepository.find({
       where: { viaje: { id } },
       relations: ["destino"],
@@ -46,6 +47,9 @@ export const getViajeById = async (id) => {
       where: { viaje: { id } },
       relations: ["user"],
     }),
+     rutasRepository.find({
+    where: { viaje: { id } },
+  }),
   ]);
 
   const reserva = viaje.reserva;
@@ -95,6 +99,18 @@ export const getViajeById = async (id) => {
       apellidos: u.user.apellidos,
       celular: u.user.celular,
     })),
+
+    rutas: rutas.map(r => ({
+  id: r.id,
+  kilome: r.kilome,
+  k1: r.k1,
+  k2: r.k2,
+  k3: r.k3,
+  k4: r.k4,
+  k5: r.k5,
+  adicional: r.adicional,
+  total: r.total,
+})),
 };
 };
 
@@ -207,6 +223,6 @@ export const deleteFullViaje = async (id) => {
   await destinoViajeRepository.delete({ viaje: { id } });
   await vehicleTravelRepository.delete({ viaje: { id } });
   await userTravelRepository.delete({ viaje: { id } });
-
+   await rutasRepository.delete({ viaje: { id } });
   return await viajesRepository.remove(viaje);
 };

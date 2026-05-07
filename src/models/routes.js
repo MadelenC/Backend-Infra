@@ -9,6 +9,10 @@ export const Rutas = new EntitySchema({
       primary: true,
       generated: true,
     },
+    destino_id:{
+      type: "int",
+      nullable: false,
+    },
     kilome: {
       type: "float",  
       nullable: false,
@@ -50,4 +54,12 @@ export const Rutas = new EntitySchema({
       default: () => "CURRENT_TIMESTAMP",
     },
   },
+   relations:{
+    viaje: {
+      type: "many-to-one",
+      target: "Viajes",
+      joinColumn: { name: "viaje_id" },
+      nullable: false,
+    },
+   }
 });
