@@ -9,6 +9,7 @@ export const getAllViajes = async ({ page, limit }) => {
   const query = viajesRepository
     .createQueryBuilder("v")
     .leftJoinAndSelect("v.presupuestos", "presupuestos")
+    .leftJoinAndSelect("v.rutas", "rutas")
     .orderBy("v.id", "DESC")
     .skip((page - 1) * limit)
     .take(limit);
@@ -70,8 +71,10 @@ export const getViajeById = async (id) => {
   // relaciones
   destinos: destinos.map(d => ({
     id: d.destino.id,
+    dep_inicio: d.destino.dep_inicio,
     origen: d.destino.origen,
     destino: d.destino.destino,
+    dep_final: d.destino.dep_final,
     ruta: d.destino.ruta,
     kilometraje: d.destino.kilometraje,
   })),
@@ -101,16 +104,29 @@ export const getViajeById = async (id) => {
     })),
 
     rutas: rutas.map(r => ({
-  id: r.id,
-  kilome: r.kilome,
-  k1: r.k1,
-  k2: r.k2,
-  k3: r.k3,
-  k4: r.k4,
-  k5: r.k5,
-  adicional: r.adicional,
-  total: r.total,
-})),
+        id: r.id,
+
+        destino_id: r.destino_id,
+        kilome: r.kilome,
+
+        dest1: r.dest1,
+        k1: r.k1,
+
+        dest2: r.dest2,
+        k2: r.k2,
+
+        dest3: r.dest3,
+        k3: r.k3,
+
+        dest4: r.dest4,
+        k4: r.k4,
+
+        dest5: r.dest5,
+        k5: r.k5,
+
+        adicional: r.adicional,
+        total: r.total,
+      })),
 };
 };
 
@@ -140,6 +156,37 @@ export const createFullViaje = async (data) => {
 
     const viajeGuardado = await viajesRepository.save(nuevoViaje);
     console.log("🚗 VIAJE GUARDADO:", viajeGuardado);
+
+
+    await rutasRepository.save({
+  viaje: viajeGuardado,
+
+ 
+  destino_id: data.destinos[0]?.id || null,
+  kilome: Number(data.destinos[0]?.km || 0),
+
+  dest1: data.destinos[1]?.id || null,
+  k1: Number(data.destinos[1]?.km || 0),
+
+  dest2: data.destinos[2]?.id || null,
+  k2: Number(data.destinos[2]?.km || 0),
+
+  dest3: data.destinos[3]?.id || null,
+  k3: Number(data.destinos[3]?.km || 0),
+
+  dest4: data.destinos[4]?.id || null,
+  k4: Number(data.destinos[4]?.km || 0),
+
+  dest5: data.destinos[5]?.id || null,
+  k5: Number(data.destinos[5]?.km || 0),
+
+  adicional: Number(data.kmAdicional || 0),
+
+  total: Number(data.kmTotal || 0),
+
+  created_at: new Date(),
+  updated_at: new Date(),
+});
 
    
     if (Array.isArray(data.destinos)) {
@@ -202,16 +249,146 @@ export const createFullViaje = async (data) => {
 
 
 export const updateFullViaje = async (id, data) => {
-  const viaje = await viajesRepository.findOneBy({ id });
 
-  if (!viaje) throw new Error("Viaje no encontrado");
+  const viaje = await viajesRepository.findOne({
+    where: { id }
+  });
+
+  if (!viaje) {
+    throw new Error("Viaje no encontrado");
+  }
+
+  // =========================
+  // ACTUALIZAR DATOS PRINCIPALES
+  // =========================
 
   viajesRepository.merge(viaje, {
-    ...data,
+    tipo: data.tipo,
+    entidad: data.entidad,
+    objetivo: data.objetivo,
+    dias: data.dias,
+    pasajeros: data.pasajeros,
+    fecha_inicial: data.fecha_inicial,
+    fecha_final: data.fecha_final,
     updated_at: new Date(),
   });
 
-  return await viajesRepository.save(viaje);
+  await viajesRepository.save(viaje);
+
+  // =========================
+  // ELIMINAR RELACIONES ANTIGUAS
+  // =========================
+
+  await destinoViajeRepository.delete({
+    viaje: { id }
+  });
+
+  await vehicleTravelRepository.delete({
+    viaje: { id }
+  });
+
+  await userTravelRepository.delete({
+    viaje: { id }
+  });
+
+  await rutasRepository.delete({
+    viaje: { id }
+  });
+
+  // =========================
+  // INSERTAR NUEVOS DESTINOS
+  // =========================
+
+  if (Array.isArray(data.destinos)) {
+
+    for (const d of data.destinos) {
+
+      await destinoViajeRepository.save({
+        viaje: viaje,
+        destino: {
+          id: d.id
+        },
+        created_at: new Date(),
+        updated_at: new Date(),
+      });
+
+    }
+
+  }
+
+  // =========================
+  // INSERTAR VEHICULOS
+  // =========================
+
+  if (Array.isArray(data.vehiculos)) {
+
+    for (const v of data.vehiculos) {
+
+      await vehicleTravelRepository.save({
+        viaje: viaje,
+        vehiculo: {
+          id: v.id
+        }
+      });
+
+    }
+
+  }
+
+  // =========================
+  // INSERTAR USUARIOS
+  // =========================
+
+  if (Array.isArray(data.usuarios)) {
+
+    for (const u of data.usuarios) {
+
+      await userTravelRepository.save({
+        viaje: viaje,
+        user: {
+          id: u.id
+        }
+      });
+
+    }
+
+  }
+
+  // =========================
+  // INSERTAR RUTAS
+  // =========================
+
+  await rutasRepository.save({
+
+    viaje: viaje,
+
+    destino_id: data.destinos[0]?.id || null,
+    kilome: Number(data.destinos[0]?.km || 0),
+
+    dest1: data.destinos[1]?.id || null,
+    k1: Number(data.destinos[1]?.km || 0),
+
+    dest2: data.destinos[2]?.id || null,
+    k2: Number(data.destinos[2]?.km || 0),
+
+    dest3: data.destinos[3]?.id || null,
+    k3: Number(data.destinos[3]?.km || 0),
+
+    dest4: data.destinos[4]?.id || null,
+    k4: Number(data.destinos[4]?.km || 0),
+
+    dest5: data.destinos[5]?.id || null,
+    k5: Number(data.destinos[5]?.km || 0),
+
+    adicional: Number(data.kmAdicional || 0),
+
+    total: Number(data.kmTotal || 0),
+
+    created_at: new Date(),
+    updated_at: new Date(),
+  });
+
+  return viaje;
 };
 
 

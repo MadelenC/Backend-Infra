@@ -17,25 +17,45 @@ export const Rutas = new EntitySchema({
       type: "float",  
       nullable: false,
     },
+    dest1:{
+      type: "int",
+      nullable: false,
+    },
     k1: {
       type: "float",
       nullable: false,
     },
+    dest2:{
+      type: "int",
+      nullable: true,
+    },
     k2: {
       type: "float",
-      nullable: false,
+      nullable: true,
+    },
+    dest3:{
+      type: "int",
+      nullable: true,
     },
     k3: {
       type: "float",
-      nullable: false,
+      nullable: true,
+    },
+    dest4:{
+      type: "int",
+      nullable: true,
     },
     k4:{
       type:"float",
+      nullable: true,
+    },
+    dest5:{
+      type: "int",
       nullable: false,
     },
     k5:{
       type:"float",
-      nullable: false,
+      nullable: true,
     },
     adicional:{
       type:"float",
