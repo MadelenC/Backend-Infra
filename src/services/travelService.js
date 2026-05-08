@@ -259,9 +259,7 @@ export const updateFullViaje = async (id, data) => {
     throw new Error("Viaje no encontrado");
   }
 
-  // =========================
-  // ACTUALIZAR DATOS PRINCIPALES
-  // =========================
+
 
   viajesRepository.merge(viaje, {
     tipo: data.tipo,
@@ -278,9 +276,6 @@ export const updateFullViaje = async (id, data) => {
 
   await viajesRepository.save(viaje);
 
-  // =========================
-  // ELIMINAR RELACIONES ANTIGUAS
-  // =========================
 
   await destinoViajeRepository.delete({
     viaje: { id }
@@ -298,9 +293,7 @@ export const updateFullViaje = async (id, data) => {
     viaje: { id }
   });
 
-  // =========================
-  // INSERTAR NUEVOS DESTINOS
-  // =========================
+ 
 
   if (Array.isArray(data.destinos)) {
 
@@ -319,9 +312,7 @@ export const updateFullViaje = async (id, data) => {
 
   }
 
-  // =========================
-  // INSERTAR VEHICULOS
-  // =========================
+
 
   if (Array.isArray(data.vehiculos)) {
 
@@ -338,9 +329,7 @@ export const updateFullViaje = async (id, data) => {
 
   }
 
-  // =========================
-  // INSERTAR USUARIOS
-  // =========================
+
 
   if (Array.isArray(data.usuarios)) {
 
@@ -357,9 +346,6 @@ export const updateFullViaje = async (id, data) => {
 
   }
 
-  // =========================
-  // INSERTAR RUTAS
-  // =========================
 
   await rutasRepository.save({
 

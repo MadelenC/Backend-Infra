@@ -1,9 +1,30 @@
 import { budgetsRepository } from "../repositories/budgetsRepository.js";
 import { viajesRepository } from "../repositories/travelRepository.js";  
-
+import { userRepository } from "../repositories/userRepository.js";
+import { vehicleRepository } from "../repositories/vehicleRepository.js";
 // Traer todos los presupuestos con su viaje relacionado
 export const getAllBudgets = async () => {
-  return await budgetsRepository.find({ relations: ["viaje"] });
+  const budgets = await budgetsRepository.find({
+    relations: ["viaje"],
+  });
+
+  const result = await Promise.all(
+    budgets.map(async (b) => {
+
+      const chofer = await userRepository.findOneBy({ id: b.chofer });
+      const vehiculo = await vehicleRepository.findOneBy({ id: b.vehiculo });
+      const encargado = await userRepository.findOneBy({ id: b.encargado });
+
+      return {
+        ...b,
+        chofer,
+        vehiculo,
+        encargado,
+      };
+    })
+  );
+
+  return result;
 };
 
 // Traer un presupuesto por ID
