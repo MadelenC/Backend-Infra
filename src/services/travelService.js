@@ -3,6 +3,7 @@ import { destinoViajeRepository } from "../repositories/destino_viajeRepository.
 import { vehicleTravelRepository } from "../repositories/vehicle_travelRepository.js";
 import { userTravelRepository } from "../repositories/user_travelRepository.js";
 import { rutasRepository } from "../repositories/routesRepository.js";
+import { budgetsRepository } from "../repositories/budgetsRepository.js";
 
 
 export const getAllViajes = async ({ page, limit }) => {
@@ -270,6 +271,8 @@ export const updateFullViaje = async (id, data) => {
     pasajeros: data.pasajeros,
     fecha_inicial: data.fecha_inicial,
     fecha_final: data.fecha_final,
+    estado: data.estado, 
+    created_at: new Date(),
     updated_at: new Date(),
   });
 
@@ -401,5 +404,26 @@ export const deleteFullViaje = async (id) => {
   await vehicleTravelRepository.delete({ viaje: { id } });
   await userTravelRepository.delete({ viaje: { id } });
    await rutasRepository.delete({ viaje: { id } });
+   await budgetsRepository.delete({
+  viaje: { id }
+});
   return await viajesRepository.remove(viaje);
+};
+
+export const cancelViaje = async (id) => {
+
+  const viaje = await viajesRepository.findOne({
+    where: { id }
+  });
+
+  if (!viaje) {
+    throw new Error("Viaje no encontrado");
+  }
+
+  viaje.estado = "cancelado";
+  viaje.updated_at = new Date();
+
+  await viajesRepository.save(viaje);
+
+  return viaje;
 };

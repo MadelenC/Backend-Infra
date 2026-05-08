@@ -10,18 +10,18 @@ export const budgets = new EntitySchema({
       generated: true,
     },
     vehiculo: {
-      type: "varchar",
-      length: 255,
+      type: "int",
+      
       nullable: false,
     },
     chofer: {
-      type: "varchar",
-      length: 255,
+      type: "int",
+      
       nullable: false,
     },
     encargado: {
-      type: "varchar",
-      length: 255,
+      type: "int",
+      
       nullable: false,
     },
     entidad: {
@@ -34,12 +34,12 @@ export const budgets = new EntitySchema({
     },
     division1: {
       type: "varchar",
-      length: 255,
+      
       nullable: false,
     },
     combustible1: {
       type: "varchar",
-      length: 255,
+     
       nullable: false,
     },
     cantidad1: {
@@ -48,12 +48,11 @@ export const budgets = new EntitySchema({
     },
     carta1: {
       type: "varchar",
-      length: 255,
+      
       nullable: false,
     },
     precio1: {
       type: "varchar",
-      length: 255,
       nullable: false,
     },
     total1C: {
@@ -62,12 +61,12 @@ export const budgets = new EntitySchema({
     },
     cantidad2: {
       type: "varchar",
-      length: 255,
+      
       nullable: false,
     },
     precio2: {
       type: "varchar",
-      length: 255,
+      
       nullable: false,
     },
     total2VC: {
@@ -76,12 +75,12 @@ export const budgets = new EntitySchema({
     },
     cantidad3: {
       type: "varchar",
-      length: 255,
+      
       nullable: false,
     },
     precio3: {
       type: "varchar",
-      length: 255,
+      
       nullable: false,
     },
     total3VP: {
@@ -90,12 +89,12 @@ export const budgets = new EntitySchema({
     },
     cantidad4: {
       type: "varchar",
-      length: 255,
+    
       nullable: false,
     },
     precio4: {
       type: "varchar",
-      length: 255,
+    
       nullable: false,
     },
     total4VF: {
@@ -104,12 +103,12 @@ export const budgets = new EntitySchema({
     },
     cantidad5: {
       type: "varchar",
-      length: 255,
+      
       nullable: false,
     },
     precio5: {
       type: "varchar",
-      length: 255,
+      
       nullable: false,
     },
     total5P: {
@@ -118,12 +117,12 @@ export const budgets = new EntitySchema({
     },
     cantidad6: {
       type: "varchar",
-      length: 255,
+     
       nullable: false,
     },
     precio6: {
       type: "varchar",
-      length: 255,
+      
       nullable: false,
     },
     total6M: {
@@ -132,12 +131,12 @@ export const budgets = new EntitySchema({
     },
     cantidad7: {
       type: "varchar",
-      length: 255,
+      
       nullable: false,
     },
     precio7: {
       type: "varchar",
-      length: 255,
+      
       nullable: false,
     },
     total7G: {
@@ -146,12 +145,10 @@ export const budgets = new EntitySchema({
     },
     total8T: {
       type: "varchar",
-      length: 255,
       nullable: false,
     },
     responsable: {
       type: "varchar",
-      length: 255,
       nullable: false,
     },
     materia: {
@@ -160,26 +157,22 @@ export const budgets = new EntitySchema({
     },
     sigla: {
       type: "varchar",
-      length: 255,
       nullable: false,
     },
     ndocentes: {
       type: "varchar",
-      length: 255,
       nullable: false,
     },
     hsalida: {
-      type: "varchar",
+      type: "time",
       nullable: false,
     },
     hllegada: {
-      type: "varchar",
-      length: 255,
+      type: "time",
       nullable: false,
     },
     p1: {
       type: "varchar",
-      length: 255,
       nullable: false,
     },
     r1: {
@@ -188,12 +181,10 @@ export const budgets = new EntitySchema({
     },
     c1: {
       type: "varchar",
-      length: 255,
       nullable: false,
     },
     t1: {
       type: "varchar",
-      length: 255,
       nullable: false,
     },
     p2: {
@@ -202,12 +193,10 @@ export const budgets = new EntitySchema({
     },
     r2: {
       type: "varchar",
-      length: 255,
       nullable: false,
     },
     c2: {
       type: "varchar",
-      length: 255,
       nullable: false,
     },
     t2: {
@@ -216,12 +205,10 @@ export const budgets = new EntitySchema({
     },
     p3: {
       type: "varchar",
-      length: 255,
       nullable: false,
     },
     c3: {
       type: "varchar",
-      length: 255,
       nullable: false,
     },
     t3: {
@@ -230,12 +217,10 @@ export const budgets = new EntitySchema({
     },
     tt: {
       type: "varchar",
-      length: 255,
       nullable: false,
     },
     diferencia: {
       type: "varchar",
-      length: 255,
       nullable: false,
     },
     nota: {

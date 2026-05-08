@@ -58,3 +58,25 @@ export const deleteFullViaje = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const cancelViajeController = async (req, res) => {
+  try {
+
+    const { id } = req.params;
+
+    console.log("ID:", id);
+
+    const viaje = await viajesService.cancelViaje(id);
+
+    res.json(viaje);
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(400).json({
+      message: error.message
+    });
+
+  }
+};

@@ -5,6 +5,7 @@ import {
   createFullViaje,
   updateFullViaje,
   deleteFullViaje,
+  cancelViajeController
 } from "../controllers/travelController.js";
 
 const router = Router();
@@ -15,5 +16,6 @@ router.get("/:id", getViajeById);       // Obtener viaje por ID
 router.post("/", createFullViaje);      // Crear viaje completo
 router.put("/:id", updateFullViaje);    // Actualizar viaje completo
 router.delete("/:id", deleteFullViaje); // Eliminar viaje completo
+router.patch("/:id/cancelar", cancelViajeController);
 
 export default router;
