@@ -15,6 +15,8 @@ export const getAllVehicles = async ({ page, limit, estado }) => {
 
   const [data, total] = await query.getManyAndCount();
 
+  
+
   return {
     data,
     total,

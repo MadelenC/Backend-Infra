@@ -15,6 +15,7 @@ export const VehicleTravel = new EntitySchema({
     vehiculo: {
       type: "many-to-one",
       target: "vehiculos",
+       inverseSide: "vehicleTravels",
       joinColumn: {
         name: "vehiculo_id",
       },

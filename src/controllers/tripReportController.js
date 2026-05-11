@@ -3,10 +3,22 @@ import * as tripReportService from "../services/tripReportService.js";
 
 export const getTripReports = async (req, res) => {
   try {
-    const data = await tripReportService.getAllTripReports();
-    res.json(data);
+    const {
+      page = 1,
+      limit = 8,
+      search = "",
+    } = req.query;
+
+    const result = await tripReportService.getAllTripReports({
+      page: Number(page),
+      limit: Number(limit),
+      search,
+    });
+
+    res.json(result);
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 

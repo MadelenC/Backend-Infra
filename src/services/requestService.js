@@ -31,10 +31,7 @@ export const getRequestById = async (id) => {
 
 export const createRequest = async (data) => {
   try {
-    // Validaciones básicas (puedes ampliar)
-    if (!data.orden || !data.fecha || !data.nombre) {
-      throw new Error("Faltan campos obligatorios");
-    }
+   
 
     const nuevo = requestRepository.create({
       orden: data.orden,
@@ -97,10 +94,13 @@ export const createRequest = async (data) => {
 
       // relación
       solicitud: data.solicitud,
+      created_at: new Date(),
+      updated_at: new Date(),
     });
 
     return await requestRepository.save(nuevo);
   } catch (error) {
+    console.error(error);
     throw new Error("Error al crear request: " + error.message);
   }
 };

@@ -2,18 +2,45 @@ import { budgetsRepository } from "../repositories/budgetsRepository.js";
 import { viajesRepository } from "../repositories/travelRepository.js";  
 import { userRepository } from "../repositories/userRepository.js";
 import { vehicleRepository } from "../repositories/vehicleRepository.js";
-// Traer todos los presupuestos con su viaje relacionado
-export const getAllBudgets = async () => {
-  const budgets = await budgetsRepository.find({
-    relations: ["viaje"],
-  });
+
+export const getAllBudgets = async ({
+  page = 1,
+  limit = 8,
+  search = "",
+}) => {
+  const query = budgetsRepository
+    .createQueryBuilder("b")
+    .leftJoinAndSelect("b.viaje", "viaje")
+    .orderBy("b.id", "DESC");
+
+   // SEARCH
+if (search) {
+  query.andWhere(
+    `b.entidad LIKE :search`,
+    {
+      search: `%${search}%`,
+    }
+  );
+}
+
+  // PAGINACIÓN
+  query.skip((page - 1) * limit).take(limit);
+
+  const [budgets, total] = await query.getManyAndCount();
 
   const result = await Promise.all(
     budgets.map(async (b) => {
+      const chofer = await userRepository.findOneBy({
+        id: b.chofer,
+      });
 
-      const chofer = await userRepository.findOneBy({ id: b.chofer });
-      const vehiculo = await vehicleRepository.findOneBy({ id: b.vehiculo });
-      const encargado = await userRepository.findOneBy({ id: b.encargado });
+      const vehiculo = await vehicleRepository.findOneBy({
+        id: b.vehiculo,
+      });
+
+      const encargado = await userRepository.findOneBy({
+        id: b.encargado,
+      });
 
       return {
         ...b,
@@ -24,7 +51,11 @@ export const getAllBudgets = async () => {
     })
   );
 
-  return result;
+  return {
+    data: result,
+    total,
+    totalPages: Math.ceil(total / limit),
+  };
 };
 
 // Traer un presupuesto por ID
@@ -33,8 +64,29 @@ export const getBudgetById = async (id) => {
     where: { id },
     relations: ["viaje"],
   });
-  if (!presupuesto) throw new Error("Presupuesto no encontrado");
-  return presupuesto;
+
+  if (!presupuesto) {
+    throw new Error("Presupuesto no encontrado");
+  }
+
+  const chofer = await userRepository.findOneBy({
+    id: presupuesto.chofer,
+  });
+
+  const vehiculo = await vehicleRepository.findOneBy({
+    id: presupuesto.vehiculo,
+  });
+
+  const encargado = await userRepository.findOneBy({
+    id: presupuesto.encargado,
+  });
+
+  return {
+    ...presupuesto,
+    chofer,
+    vehiculo,
+    encargado,
+  };
 };
 
 // Crear un nuevo presupuesto

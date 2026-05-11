@@ -25,6 +25,7 @@ export const UserTravel = new EntitySchema({
     viaje: {
       type: "many-to-one",
       target: "viajes",
+      inverseSide: "userTravels",
       joinColumn: {
         name: "viaje_id",
       },

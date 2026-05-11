@@ -19,7 +19,8 @@ export const getApplicationById = async (id) => {
 
 export const createApplication = async (data) => {
   try {
-    console.log("DATA RECIBIDA:", data);
+    console.log("DATA:", data);
+    const hoy = new Date().toISOString().split("T")[0];
 
     const vehiculo = await vehicleRepository.findOneBy({
       id: data.vehiculo_id,
@@ -27,31 +28,53 @@ export const createApplication = async (data) => {
 
     if (!vehiculo) throw new Error("Vehículo no encontrado");
 
-    const nueva = applicationRepository.create({
-      chofer: data.chofer,
-      descripsoli: data.descripsoli,
-      fecha: data.fecha,
-      vehiculo,
-    });
+    const saved = await applicationRepository.save(
+      applicationRepository.create({
+        chofer: vehiculo.codigo,
+        descripsoli: data.descripsoli,
+        fecha: hoy, 
+        vehiculo,
+        created_at: new Date(),
+        updated_at: new Date(),
+      })
+    );
 
-    const saved = await applicationRepository.save(nueva);
-
-   
+    //  ACCESORIOS EXISTENTES
     if (Array.isArray(data.accesorio_ids)) {
       for (const id of data.accesorio_ids) {
-        const accesorio = await accessoriesRepository.findOneBy({ id });
+        const acc = await accessoriesRepository.findOneBy({ id });
 
-        if (!accesorio) continue;
+        if (!acc) {
+          console.log("Accesorio no existe:", id);
+          continue;
+        }
 
-        accesorio.solicitud = saved;
-        await accessoriesRepository.save(accesorio);
+        await accessoriesRepository.update(id, {
+          solicitud: saved,
+          created_at: new Date(),
+          updated_at: new Date(),
+        });
+      }
+    }
+
+    //para  NUEVOS ACCESORIOS
+    if (Array.isArray(data.nuevos_accesorios)) {
+      for (const nombre of data.nuevos_accesorios) {
+        await accessoriesRepository.save(
+          accessoriesRepository.create({
+            solicitud1: nombre,
+            solicitud: saved,
+            created_at: new Date(),
+             updated_at: new Date(),
+          })
+        );
       }
     }
 
     return saved;
 
   } catch (error) {
-    console.error("🔥 ERROR EN CREATE APPLICATION:", error);
+    console.error("🔥 ERROR CREATE APPLICATION:", error);
     throw error;
   }
 };
@@ -65,14 +88,17 @@ export const updateApplication = async (id, data) => {
 
 
   if (data.vehiculo_id) {
-    const vehiculo = await vehicleRepository.findOneBy({
-      id: data.vehiculo_id,
-    });
+  const vehiculo = await vehicleRepository.findOneBy({
+    id: data.vehiculo_id,
+  });
 
-    if (!vehiculo) throw new Error("Vehículo no encontrado");
+  if (!vehiculo) throw new Error("Vehículo no encontrado");
 
-    application.vehiculo = vehiculo;
-  }
+  application.vehiculo = vehiculo;
+
+
+  application.chofer = vehiculo.codigo;
+}
 
 
   if (Array.isArray(data.accesorio_ids)) {

@@ -55,4 +55,23 @@ export const deleteUser = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+
+ 
+};
+
+
+ // 🔐 CAMBIAR CONTRASEÑA (NUEVO)
+export const changePassword = async (req, res) => {
+  try {
+    const result = await userService.changePassword(
+      req.params.id,   // 👈 AQUÍ el fix
+      req.body
+    );
+
+    res.json(result);
+  } catch (err) {
+    res.status(err.status || 500).json({
+      message: err.message,
+    });
+  }
 };

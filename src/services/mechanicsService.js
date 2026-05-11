@@ -30,9 +30,12 @@ export const createMechanic = async (data) => {
     codigo: data.codigo,
     observacion: data.observacion,
     kilometraje: data.kilometraje,
-    insertador: data.insertador,
+     insertador: data.insertador,
     solicitud_id: data.solicitud_id,
+    created_at: new Date(),
+    updated_at: new Date(),
   });
+  
 
   return await mechanicsRepository.save(newMechanic);
 };

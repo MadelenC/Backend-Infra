@@ -11,6 +11,10 @@ export const getAllViajes = async ({ page, limit }) => {
     .createQueryBuilder("v")
     .leftJoinAndSelect("v.presupuestos", "presupuestos")
     .leftJoinAndSelect("v.rutas", "rutas")
+    .leftJoinAndSelect("v.vehicleTravels", "vehicleTravels")
+    .leftJoinAndSelect("vehicleTravels.vehiculo", "vehiculo")
+    .leftJoinAndSelect("v.userTravels", "userTravels")
+    .leftJoinAndSelect("userTravels.user", "user")
     .orderBy("v.id", "DESC")
     .skip((page - 1) * limit)
     .take(limit);

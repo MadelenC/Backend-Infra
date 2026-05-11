@@ -4,7 +4,14 @@ import * as budgetsService from "../services/budgetsService.js";
 // Traer todos los presupuestos
 export const getBudgets = async (req, res) => {
   try {
-    const data = await budgetsService.getAllBudgets();
+    const { page, limit, search } = req.query;
+
+    const data = await budgetsService.getAllBudgets({
+      page: Number(page),
+      limit: Number(limit),
+      search,
+    });
+
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -75,7 +75,22 @@ export const Viajes = new EntitySchema({
       type:"one-to-many",
       target:"Rutas",
       inverseSide:"viaje",
-    }
+    },
+
+  userTravels: {
+    type: "one-to-many",
+    target: "UserTravel",
+    inverseSide: "viaje",
+    
+  },
+
+  
+  vehicleTravels: {
+    type: "one-to-many",
+    target: "VehicleTravel",
+    inverseSide: "viaje",
+   
+  },
     
   },
 });

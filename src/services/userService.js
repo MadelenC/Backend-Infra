@@ -228,4 +228,47 @@ export const deleteUser = async (id) => {
   } catch (err) {
     throw { status: 500, message: "Error al eliminar usuario" };
   }
+
+};
+//para cambiar cotraseña
+ export const changePassword = async (id, data) => {
+
+  const { currentPassword, newPassword } = data;
+
+  console.log("👉 ID:", id);
+  console.log("👉 DATA:", data);
+
+  const user = await userRepository.findOne({
+    where: { id },
+  });
+
+  console.log("👉 USER:", user);
+  console.log("👉 PASSWORD DB:", user.password);
+
+  if (!user) throw { status: 404, message: "Usuario no encontrado" };
+
+  const isValid = await bcrypt.compare(
+    currentPassword,
+    user.password
+  );
+
+  console.log("👉 PASSWORD INPUT:", currentPassword);
+  console.log("👉 COMPARE RESULT:", isValid);
+
+  if (!isValid) {
+    throw { status: 400, message: "Contraseña actual incorrecta" };
+  }
+
+  if (!newPassword || newPassword.length < 6) {
+    throw { status: 400, message: "Mínimo 6 caracteres" };
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  user.password = hashedPassword;
+  user.updated_at = new Date();
+
+  await userRepository.save(user);
+
+  return { message: "Contraseña actualizada correctamente" };
 };
