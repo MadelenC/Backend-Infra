@@ -73,6 +73,8 @@ export const getViajeById = async (id) => {
   fecha_inicial: viaje.fecha_inicial,
   fecha_final: viaje.fecha_final,
 
+  presupuestos: viaje.presupuestos || [],
+
   // relaciones
   destinos: destinos.map(d => ({
     id: d.destino.id,
@@ -132,6 +134,8 @@ export const getViajeById = async (id) => {
         adicional: r.adicional,
         total: r.total,
       })),
+
+
 };
 };
 
