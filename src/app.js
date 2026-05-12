@@ -27,6 +27,8 @@
   import user_travelRoutes   from "./routes/user_travelRoutes.js";
   import vehicle_travelRoutes from "./routes/vehicle_travelRoutes.js"
   import destino_viajeRoutes from "./routes/destino_viajeRoutes.js"
+  import infoviajeRoutes from "./routes/infoviajeRoutes.js";
+  
   dotenv.config();
 
   const app = express();
@@ -65,4 +67,6 @@
   app.use("/api/userviaje",user_travelRoutes );
   app.use("/api/vehicletravel",vehicle_travelRoutes);
   app.use("/api/destinoviaje",destino_viajeRoutes);
+  app.use("/api/infoviaje", infoviajeRoutes );
+
   export default app;

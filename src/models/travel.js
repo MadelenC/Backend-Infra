@@ -91,6 +91,13 @@ export const Viajes = new EntitySchema({
     inverseSide: "viaje",
    
   },
+
+  infoviajes: {
+    type: "one-to-many",
+    target: "infoviaje",
+    inverseSide: "viaje",
+  },
+
     
   },
 });

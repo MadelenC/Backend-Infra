@@ -4,6 +4,7 @@ import { vehicleTravelRepository } from "../repositories/vehicle_travelRepositor
 import { userTravelRepository } from "../repositories/user_travelRepository.js";
 import { rutasRepository } from "../repositories/routesRepository.js";
 import { budgetsRepository } from "../repositories/budgetsRepository.js";
+import { infoviajeRepository } from "../repositories/infoviajeRepository.js";
 
 
 export const getAllViajes = async ({ page, limit }) => {
@@ -15,6 +16,7 @@ export const getAllViajes = async ({ page, limit }) => {
     .leftJoinAndSelect("vehicleTravels.vehiculo", "vehiculo")
     .leftJoinAndSelect("v.userTravels", "userTravels")
     .leftJoinAndSelect("userTravels.user", "user")
+    .leftJoinAndSelect("v.infoviajes", "infoviajes")
     .orderBy("v.id", "DESC")
     .skip((page - 1) * limit)
     .take(limit);
@@ -33,7 +35,7 @@ export const getViajeById = async (id) => {
 
   const viaje = await viajesRepository.findOne({
     where: { id },
-    relations: ["reserva", "presupuestos","rutas"],
+    relations: ["reserva", "presupuestos","rutas", "infoviajes"],
   });
 
   if (!viaje) throw new Error("Viaje no encontrado");
@@ -208,7 +210,7 @@ export const createFullViaje = async (data) => {
             updated_at: new Date(),
           });
 
-          console.log("✅ DESTINO INSERTADO:", result);
+          console.log("DESTINO INSERTADO:", result);
         } catch (err) {
           console.error("❌ ERROR DESTINO:", err);
         }

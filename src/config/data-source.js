@@ -26,6 +26,8 @@ import { Exceptions } from "../models/Exceptions.js";
 import {UserTravel} from "../models/User_travel.js";
 import { VehicleTravel } from "../models/vehicle_travel.js";
 import { DestinoViaje } from "../models/Destino_viaje.js";
+import { infoviaje } from "../models/infoViaje.js";
+
 
 dotenv.config();
 
@@ -67,5 +69,7 @@ export const AppDataSource = new DataSource({
     UserTravel,
     VehicleTravel,
     DestinoViaje,
+    infoviaje,
+    
   ],   
 });

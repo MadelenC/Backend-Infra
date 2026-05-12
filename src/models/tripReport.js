@@ -66,26 +66,26 @@ export const tripReport = new EntitySchema({
     },
 
     kmtotal: {
-      type: "int",
+      type: "varchar",
       nullable: true,
     },
 
     viaticoa: {
-      type: "decimal",
+      type: "varchar",
       precision: 10,
       scale: 2,
       nullable: true,
     },
 
     viaticob: {
-      type: "decimal",
+      type: "varchar",
       precision: 10,
       scale: 2,
       nullable: true,
     },
 
     viaticoc: {
-      type: "decimal",
+      type: "varchar",
       precision: 10,
       scale: 2,
       nullable: true,
@@ -97,12 +97,12 @@ export const tripReport = new EntitySchema({
     },
 
     dias: {
-      type: "int",
+      type: "varchar",
       nullable: true,
     },
 
     recargue1: {
-      type: "decimal",
+      type: "varchar",
       precision: 10,
       scale: 2,
       nullable: true,
@@ -115,7 +115,7 @@ export const tripReport = new EntitySchema({
     },
 
     recargue2: {
-      type: "decimal",
+      type: "varchar",
       precision: 10,
       scale: 2,
       nullable: true,
@@ -128,7 +128,7 @@ export const tripReport = new EntitySchema({
     },
 
     recargue3: {
-      type: "decimal",
+      type: "varchar",
       precision: 10,
       scale: 2,
       nullable: true,
@@ -141,14 +141,14 @@ export const tripReport = new EntitySchema({
     },
 
     combustotalu: {
-      type: "decimal",
+      type: "varchar",
       precision: 10,
       scale: 2,
       nullable: true,
     },
 
     combustotalco: {
-      type: "decimal",
+      type: "varchar",
       precision: 10,
       scale: 2,
       nullable: true,
@@ -160,21 +160,21 @@ export const tripReport = new EntitySchema({
     },
 
     montope: {
-      type: "decimal",
+      type: "varchar",
       precision: 10,
       scale: 2,
       nullable: true,
     },
 
     montoim: {
-      type: "decimal",
+      type: "varchar",
       precision: 10,
       scale: 2,
       nullable: true,
     },
 
     totalpeim: {
-      type: "decimal",
+      type: "varchar",
       precision: 10,
       scale: 2,
       nullable: true,

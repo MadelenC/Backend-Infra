@@ -1,3 +1,4 @@
+import { infoviajeRepository } from "../repositories/infoviajeRepository.js";
 import { userRepository } from "../repositories/userRepository.js";
 import { vehicleRepository } from "../repositories/vehicleRepository.js";
 import { tripReportRepository } from "../repositories/tripReportRepository.js";
@@ -45,9 +46,7 @@ export const getAllTripReports = async ({
     totalPages: Math.ceil(total / limit),
   };
 };
-/* =========================
-   GET BY ID
-========================= */
+
 export const getTripReportById = async (id) => {
   const report = await tripReportRepository.findOneBy({ id });
 
@@ -58,15 +57,18 @@ export const getTripReportById = async (id) => {
   return report;
 };
 
-/* =========================
-   CREATE
-========================= */
-export const createTripReport = async (data) => {
-  const nuevo = tripReportRepository.create({
+
+export const createFullTripReport = async (data) => {
+
+
+  const viaje = await viajeRepository.findOneBy({ id: data.viaje });
+  if (!viaje) throw new Error("Viaje no encontrado");
+
+  
+  const informe = tripReportRepository.create({
     vehiculo: data.vehiculo,
     chofer: data.chofer,
     encargado: data.encargado,
-
     entidad: data.entidad,
 
     fechapartida: data.fechapartida,
@@ -94,24 +96,27 @@ export const createTripReport = async (data) => {
     compra3: data.compra3,
 
     combustotalu: data.combustotalu,
-    combustotalco: data.combustotalco,
 
     descripe: data.descripe,
-    montope: data.montope,
-    montoim: data.montoim,
-    totalpeim: data.totalpeim,
-
-    delegacion: data.delegacion,
     descripmante: data.descripmante,
     recomendacion: data.recomendacion,
+    created_at: new Date(),
+    updated_at: new Date(),
   });
 
-  return await tripReportRepository.save(nuevo);
+  const savedInforme = await tripReportRepository.save(informe);
+
+ 
+  const infoviaje = infoviajeRepository.create({
+    viaje: viaje,
+    informe: savedInforme,
+  });
+
+  await infoviajeRepository.save(infoviaje);
+
+  return savedInforme;
 };
 
-/* =========================
-   UPDATE
-========================= */
 export const updateTripReport = async (id, data) => {
   const report = await tripReportRepository.findOneBy({ id });
 
@@ -123,9 +128,7 @@ export const updateTripReport = async (id, data) => {
   return await tripReportRepository.save(report);
 };
 
-/* =========================
-   DELETE
-========================= */
+
 export const deleteTripReport = async (id) => {
   const report = await tripReportRepository.findOneBy({ id });
 
