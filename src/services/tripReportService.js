@@ -2,13 +2,15 @@ import { infoviajeRepository } from "../repositories/infoviajeRepository.js";
 import { userRepository } from "../repositories/userRepository.js";
 import { vehicleRepository } from "../repositories/vehicleRepository.js";
 import { tripReportRepository } from "../repositories/tripReportRepository.js";
+import { viajesRepository } from "../repositories/travelRepository.js";
+
+const toNumber = (v) => Number(v || 0);
 
 export const getAllTripReports = async ({
   page = 1,
   limit = 8,
   search = "",
 }) => {
-
   const query = tripReportRepository
     .createQueryBuilder("t")
     .orderBy("t.id", "DESC");
@@ -27,10 +29,17 @@ export const getAllTripReports = async ({
   const vehicles = await vehicleRepository.find();
 
   const data = trips.map((t) => {
+    const vehiculo = vehicles.find(
+      (v) => Number(v.id) === Number(t.vehiculo)
+    );
 
-    const vehiculo = vehicles.find(v => Number(v.id) === Number(t.vehiculo));
-    const chofer = users.find(u => Number(u.id) === Number(t.chofer));
-    const encargado = users.find(u => Number(u.id) === Number(t.encargado));
+    const chofer = users.find(
+      (u) => Number(u.id) === Number(t.chofer)
+    );
+
+    const encargado = users.find(
+      (u) => Number(u.id) === Number(t.encargado)
+    );
 
     return {
       ...t,
@@ -57,14 +66,20 @@ export const getTripReportById = async (id) => {
   return report;
 };
 
-
 export const createFullTripReport = async (data) => {
+  console.log("🔥 INICIO createFullTripReport");
+  console.log("DATA:", data);
+  console.log("VIAJE ID:", data.viaje, typeof data.viaje);
 
+  const travel = await viajesRepository.findOneBy({
+    id: Number(data.viaje),
+  });
 
-  const viaje = await viajeRepository.findOneBy({ id: data.viaje });
-  if (!viaje) throw new Error("Viaje no encontrado");
+  if (!travel) {
+    throw new Error("Viaje no encontrado");
+  }
 
-  
+  // 🧠 ENTITY COMPLETO Y SEGURO
   const informe = tripReportRepository.create({
     vehiculo: data.vehiculo,
     chofer: data.chofer,
@@ -73,43 +88,60 @@ export const createFullTripReport = async (data) => {
 
     fechapartida: data.fechapartida,
     tiempopartida: data.tiempopartida,
-    kilopartida: data.kilopartida,
+    kilopartida: toNumber(data.kilopartida),
 
     fechallegada: data.fechallegada,
     tiempollegada: data.tiempollegada,
-    kilollegada: data.kilollegada,
+    kilollegada: toNumber(data.kilollegada),
 
-    kmtotal: data.kmtotal,
+    kmtotal: toNumber(data.kmtotal),
 
-    viaticoa: data.viaticoa,
-    viaticob: data.viaticob,
-    viaticoc: data.viaticoc,
+    viaticoa: toNumber(data.viaticoa),
+    viaticob: toNumber(data.viaticob),
+    viaticoc: toNumber(data.viaticoc),
 
-    pasajeros: data.pasajeros,
-    dias: data.dias,
+    pasajeros: toNumber(data.pasajeros),
+    dias: toNumber(data.dias),
 
-    recargue1: data.recargue1,
-    compra1: data.compra1,
-    recargue2: data.recargue2,
-    compra2: data.compra2,
-    recargue3: data.recargue3,
-    compra3: data.compra3,
+    recargue1: toNumber(data.recargue1),
+    compra1: toNumber(data.compra1),
+    recargue2: toNumber(data.recargue2),
+    compra2: toNumber(data.compra2),
+    recargue3: toNumber(data.recargue3),
+    compra3: toNumber(data.compra3),
 
-    combustotalu: data.combustotalu,
+    combustotalco: toNumber(data.combustotalco),
+    combustotalu: toNumber(data.combustotalu),
 
-    descripe: data.descripe,
-    descripmante: data.descripmante,
-    recomendacion: data.recomendacion,
+    descripe: data.descripe || "",
+
+    // 🔥 AQUÍ ESTABA EL BUG
+    montope: toNumber(data.montope),
+    montoim: toNumber(data.montoim),
+    totalpeim: toNumber(data.totalpeim),
+
+    combus: toNumber(data.combus),
+    peaje: toNumber(data.peaje),
+    impre: toNumber(data.impre),
+    totalcopeim: toNumber(data.totalcopeim),
+
+    delegacion: data.delegacion || "",
+    descripmante: data.descripmante || "",
+    recomendacion: data.recomendacion || "",
+
     created_at: new Date(),
     updated_at: new Date(),
   });
 
+  // guardar informe
   const savedInforme = await tripReportRepository.save(informe);
 
- 
+  // relación intermedia
   const infoviaje = infoviajeRepository.create({
-    viaje: viaje,
+    viaje: travel,
     informe: savedInforme,
+    created_at: new Date(),
+    updated_at: new Date(),
   });
 
   await infoviajeRepository.save(infoviaje);
@@ -124,10 +156,15 @@ export const updateTripReport = async (id, data) => {
     throw new Error("Informe de viaje no encontrado");
   }
 
-  tripReportRepository.merge(report, data);
+  tripReportRepository.merge(report, {
+    ...data,
+    montope: toNumber(data.montope),
+    montoim: toNumber(data.montoim),
+    totalpeim: toNumber(data.totalpeim),
+  });
+
   return await tripReportRepository.save(report);
 };
-
 
 export const deleteTripReport = async (id) => {
   const report = await tripReportRepository.findOneBy({ id });

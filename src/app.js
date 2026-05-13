@@ -28,6 +28,7 @@
   import vehicle_travelRoutes from "./routes/vehicle_travelRoutes.js"
   import destino_viajeRoutes from "./routes/destino_viajeRoutes.js"
   import infoviajeRoutes from "./routes/infoviajeRoutes.js";
+ 
   
   dotenv.config();
 
@@ -41,6 +42,7 @@
   }));
 
   // Rutas
+
   app.use("/api/users", userRoutes);
   app.use("/api/auth", authRoutes); 
   app.use("/api/entidades", entidadesRoutes);

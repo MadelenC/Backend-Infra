@@ -3,11 +3,7 @@ import * as tripReportService from "../services/tripReportService.js";
 
 export const getTripReports = async (req, res) => {
   try {
-    const {
-      page = 1,
-      limit = 8,
-      search = "",
-    } = req.query;
+    const { page = 1, limit = 8, search = "" } = req.query;
 
     const result = await tripReportService.getAllTripReports({
       page: Number(page),
@@ -15,32 +11,46 @@ export const getTripReports = async (req, res) => {
       search,
     });
 
-    res.json(result);
+    return res.json(result);
 
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("❌ ERROR getTripReports:", err);
+    return res.status(500).json({ message: err.message });
   }
 };
+
 
 export const getTripReportById = async (req, res) => {
   try {
     const report = await tripReportService.getTripReportById(
       Number(req.params.id)
     );
-    res.json(report);
+
+    return res.json(report);
+
   } catch (err) {
-    res.status(404).json({ error: err.message });
+    console.error("❌ ERROR getTripReportById:", err);
+    return res.status(404).json({ error: err.message });
   }
 };
 
 export const createTripReport = async (req, res) => {
   try {
-    const nuevo = await tripReportService.createTripReport(req.body);
-    res.status(201).json(nuevo);
+    console.log("🔥 BODY RECIBIDO:", req.body);
+
+    const nuevo = await tripReportService.createFullTripReport(req.body);
+
+    return res.status(201).json(nuevo);
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("❌ ERROR createTripReport:", err);
+
+    return res.status(500).json({
+      error: err.message,
+    });
   }
 };
+
 
 export const updateTripReport = async (req, res) => {
   try {
@@ -48,17 +58,24 @@ export const updateTripReport = async (req, res) => {
       Number(req.params.id),
       req.body
     );
-    res.json(actualizado);
+
+    return res.json(actualizado);
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("❌ ERROR updateTripReport:", err);
+    return res.status(500).json({ error: err.message });
   }
 };
+
 
 export const deleteTripReport = async (req, res) => {
   try {
     await tripReportService.deleteTripReport(Number(req.params.id));
-    res.json({ message: "Informe de viaje eliminado" });
+
+    return res.json({ message: "Informe de viaje eliminado" });
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("❌ ERROR deleteTripReport:", err);
+    return res.status(500).json({ error: err.message });
   }
 };

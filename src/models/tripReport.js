@@ -13,41 +13,38 @@ export const tripReport = new EntitySchema({
 
     vehiculo: {
       type: "varchar",
-      length: 255,
-      nullable: false,
+      nullable: true,
     },
 
     chofer: {
       type: "varchar",
-      length: 255,
-      nullable: false,
+      nullable: true,
     },
 
     encargado: {
       type: "varchar",
-      length: 255,
-      nullable: false,
+      nullable: true,
     },
 
     entidad: {
       type: "varchar",
-      length: 255,
+      
       nullable: true,
     },
 
     fechapartida: {
       type: "date",
-      nullable: false,
+      nullable: true,
     },
 
     tiempopartida: {
       type: "time",
-      nullable: false,
+      nullable: true,
     },
 
     kilopartida: {
       type: "int",
-      nullable: false,
+      nullable: true,
     },
 
     fechallegada: {
@@ -72,22 +69,19 @@ export const tripReport = new EntitySchema({
 
     viaticoa: {
       type: "varchar",
-      precision: 10,
-      scale: 2,
+     
       nullable: true,
     },
 
     viaticob: {
       type: "varchar",
-      precision: 10,
-      scale: 2,
+     
       nullable: true,
     },
 
     viaticoc: {
       type: "varchar",
-      precision: 10,
-      scale: 2,
+      
       nullable: true,
     },
 
@@ -103,8 +97,7 @@ export const tripReport = new EntitySchema({
 
     recargue1: {
       type: "varchar",
-      precision: 10,
-      scale: 2,
+     
       nullable: true,
     },
 
@@ -116,8 +109,7 @@ export const tripReport = new EntitySchema({
 
     recargue2: {
       type: "varchar",
-      precision: 10,
-      scale: 2,
+      
       nullable: true,
     },
 
@@ -129,8 +121,7 @@ export const tripReport = new EntitySchema({
 
     recargue3: {
       type: "varchar",
-      precision: 10,
-      scale: 2,
+      
       nullable: true,
     },
 
@@ -142,15 +133,13 @@ export const tripReport = new EntitySchema({
 
     combustotalu: {
       type: "varchar",
-      precision: 10,
-      scale: 2,
+      
       nullable: true,
     },
 
     combustotalco: {
       type: "varchar",
-      precision: 10,
-      scale: 2,
+     
       nullable: true,
     },
 
@@ -161,22 +150,19 @@ export const tripReport = new EntitySchema({
 
     montope: {
       type: "varchar",
-      precision: 10,
-      scale: 2,
-      nullable: true,
+      
+      nullable:true,
     },
 
     montoim: {
       type: "varchar",
-      precision: 10,
-      scale: 2,
+      
       nullable: true,
     },
 
     totalpeim: {
       type: "varchar",
-      precision: 10,
-      scale: 2,
+    
       nullable: true,
     },
 
@@ -199,11 +185,10 @@ export const tripReport = new EntitySchema({
       type: "timestamp",
       default: () => "CURRENT_TIMESTAMP",
     },
-
+    // updated_at
     updated_at: {
       type: "timestamp",
       default: () => "CURRENT_TIMESTAMP",
-      onUpdate: "CURRENT_TIMESTAMP",
     },
   },
 });

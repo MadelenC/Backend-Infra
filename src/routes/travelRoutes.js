@@ -5,17 +5,18 @@ import {
   createFullViaje,
   updateFullViaje,
   deleteFullViaje,
-  cancelViajeController
+  cancelViajeController,
+ 
 } from "../controllers/travelController.js";
 
 const router = Router();
 
-// Rutas para Viajes completos
-router.get("/", getViajes);              // Listar todos los viajes
-router.get("/:id", getViajeById);       // Obtener viaje por ID
-router.post("/", createFullViaje);      // Crear viaje completo
-router.put("/:id", updateFullViaje);    // Actualizar viaje completo
-router.delete("/:id", deleteFullViaje); // Eliminar viaje completo
+
+router.get("/", getViajes);             
+router.get("/:id", getViajeById);       
+router.post("/", createFullViaje);     
+router.put("/:id", updateFullViaje);    
+router.delete("/:id", deleteFullViaje); 
 router.patch("/:id/cancelar", cancelViajeController);
 
 export default router;

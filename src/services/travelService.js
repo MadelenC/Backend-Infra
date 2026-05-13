@@ -147,6 +147,9 @@ console.log("DB:", viajesRepository.manager.connection.options.database);
 console.log("HOST:", viajesRepository.manager.connection.options.host);
 
 
+
+  
+
 export const createFullViaje = async (data) => {
   try {
     console.log("📥 DATA RECIBIDA:", data);

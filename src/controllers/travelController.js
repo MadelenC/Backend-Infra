@@ -16,6 +16,8 @@ export const getViajes = async (req, res) => {
   }
 };
 
+
+
 // --- Obtener viaje por ID ---
 export const getViajeById = async (req, res) => {
   try {
