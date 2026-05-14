@@ -190,5 +190,16 @@ export const tripReport = new EntitySchema({
       type: "timestamp",
       default: () => "CURRENT_TIMESTAMP",
     },
+    
+  },
+
+  relations: {
+
+    kilomeinformes: {
+      type: "one-to-many",
+      target: "kilomeinformes",
+      inverseSide: "informeviaje",
+    },
+
   },
 });

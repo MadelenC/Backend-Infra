@@ -53,8 +53,20 @@ export const Vehiculos = new EntitySchema({
       modelos: {
         type: "one-to-many",
         target: "Modelos",
-        inverseSide:"vehiculo"
+        inverseSide:"vehiculo",
       },
+
+      kilomeinformes: {
+      type: "one-to-many",
+      target: "kilomeinformes",
+      inverseSide: "vehiculo",
+    },
+
+    kilomecanicos: {
+      type: "one-to-many",
+      target: "kilomecanicos",
+      inverseSide: "vehiculo",
+    },
       
     }
 });

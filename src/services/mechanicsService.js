@@ -4,7 +4,7 @@ import { mechanicsRepository } from "../repositories/mechanicsRepository.js";
 // Get all mechanics
 export const getAllMechanics = async () => {
   return await mechanicsRepository.find({
-    relations: ["solicitud","solicitud.vehiculo", "devoluciones"], 
+    relations: ["solicitud","solicitud.vehiculo", "devoluciones", "kilomecanicos"], 
   });
 };
 
@@ -12,7 +12,7 @@ export const getAllMechanics = async () => {
 export const getMechanicById = async (id) => {
   const mechanic = await mechanicsRepository.findOne({
     where: { id },
-    relations: ["solicitud","solicitud.vehiculo","devoluciones"],
+    relations: ["solicitud","solicitud.vehiculo","devoluciones", "kilomecanicos"],
   });
 
   if (!mechanic) throw new Error("Mechanic not found");

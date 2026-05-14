@@ -3,6 +3,8 @@ import { userRepository } from "../repositories/userRepository.js";
 import { vehicleRepository } from "../repositories/vehicleRepository.js";
 import { tripReportRepository } from "../repositories/tripReportRepository.js";
 import { viajesRepository } from "../repositories/travelRepository.js";
+import { kilomeinformesRepository } from "../repositories/kilomeinformesRepository.js";
+import { modelosRepository } from "../repositories/modelsRepository.js";
 
 const toNumber = (v) => Number(v || 0);
 
@@ -13,6 +15,7 @@ export const getAllTripReports = async ({
 }) => {
   const query = tripReportRepository
     .createQueryBuilder("t")
+     .leftJoinAndSelect("t.kilomeinformes", "km")
     .orderBy("t.id", "DESC");
 
   if (search) {
@@ -145,6 +148,63 @@ export const createFullTripReport = async (data) => {
   });
 
   await infoviajeRepository.save(infoviaje);
+
+  // 🔥 CALCULOS KILOMETRAJE
+
+const kmPartida = toNumber(data.kilopartida);
+
+// lo que recorrió el chofer
+const kmRecorrido = toNumber(data.kilollegada);
+
+// nuevo kilometraje total del vehículo
+const kmTotal = kmPartida + kmRecorrido;
+
+
+// 🔥 REGISTRAR EN KILOMEINFORMES
+
+const nuevoKmInforme = kilomeinformesRepository.create({
+
+  hay: kmPartida,
+
+  // kilómetros recorridos
+  aumento: kmRecorrido,
+
+  // nuevo total
+  total: kmTotal,
+
+  informeviaje: {
+    id: savedInforme.id,
+  },
+
+  vehiculo: {
+    id: data.vehiculo,
+  },
+  created_at: new Date(),
+    updated_at: new Date(),
+
+});
+
+await kilomeinformesRepository.save(nuevoKmInforme);
+
+
+//ACTUALIZAR KILOMETRAJE ACTUAL DEL VEHICULO
+
+const vehiculoActual = await vehicleRepository.findOne({
+  where: {
+    id: Number(data.vehiculo),
+  },
+  relations: ["modelos"],
+});
+
+const modeloActual = vehiculoActual.modelos?.[0];
+
+if (modeloActual) {
+
+  modeloActual.kilometraje = kmTotal;
+
+  await modelosRepository.save(modeloActual);
+
+}
 
   return savedInforme;
 };

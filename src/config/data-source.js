@@ -27,6 +27,8 @@ import {UserTravel} from "../models/User_travel.js";
 import { VehicleTravel } from "../models/vehicle_travel.js";
 import { DestinoViaje } from "../models/Destino_viaje.js";
 import { infoviaje } from "../models/infoViaje.js";
+import { kilomeinformes } from "../models/kilomeinformes.js";
+import { kilomecanicos } from "../models/kilomecanicos.js";
 
 
 dotenv.config();
@@ -70,6 +72,8 @@ export const AppDataSource = new DataSource({
     VehicleTravel,
     DestinoViaje,
     infoviaje,
+    kilomeinformes,
+    kilomecanicos,
     
   ],   
 });

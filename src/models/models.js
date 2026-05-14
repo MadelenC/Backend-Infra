@@ -37,6 +37,7 @@ export const Modelos = new EntitySchema({
       joinColumn: {
         name: "vehiculo_id"
       },
+      inverseSide: "modelo",
       nullable: false
     },
      marcas: {              

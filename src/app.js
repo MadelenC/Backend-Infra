@@ -28,6 +28,8 @@
   import vehicle_travelRoutes from "./routes/vehicle_travelRoutes.js"
   import destino_viajeRoutes from "./routes/destino_viajeRoutes.js"
   import infoviajeRoutes from "./routes/infoviajeRoutes.js";
+  import kilomeinformes from "./routes/kilomeinformesRoutes.js";
+  import kilomecanicos from "./routes/institutionRoutes.js";
  
   
   dotenv.config();
@@ -70,5 +72,7 @@
   app.use("/api/vehicletravel",vehicle_travelRoutes);
   app.use("/api/destinoviaje",destino_viajeRoutes);
   app.use("/api/infoviaje", infoviajeRoutes );
+  app.use("/api/kilomeinformes", kilomeinformes );
+  app.use("/api/kilomecanicos", kilomecanicos );
 
   export default app;

@@ -5,8 +5,11 @@ import { marcasRepository } from "../repositories/marcsRepository.js";
 export const getAllVehicles = async ({ page, limit, estado }) => {
   const query = vehicleRepository
     .createQueryBuilder("v")
-    .leftJoinAndSelect("v.modelos", "modelos")
-    .leftJoinAndSelect("modelos.marcas", "marcas");
+   .leftJoinAndSelect("v.modelos", "modelos")
+.orderBy("modelos.id", "DESC")
+    .leftJoinAndSelect("modelos.marcas", "marcas")
+    .leftJoinAndSelect("v.kilomecanicos", "kmec")
+    .leftJoinAndSelect("v.kilomeinformes", "km");
   if (estado) {
     query.where("v.estado = :estado", { estado });
   }

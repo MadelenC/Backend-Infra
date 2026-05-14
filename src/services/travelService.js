@@ -7,6 +7,7 @@ import { budgetsRepository } from "../repositories/budgetsRepository.js";
 import { infoviajeRepository } from "../repositories/infoviajeRepository.js";
 
 
+
 export const getAllViajes = async ({ page, limit }) => {
   const query = viajesRepository
     .createQueryBuilder("v")
@@ -14,6 +15,7 @@ export const getAllViajes = async ({ page, limit }) => {
     .leftJoinAndSelect("v.rutas", "rutas")
     .leftJoinAndSelect("v.vehicleTravels", "vehicleTravels")
     .leftJoinAndSelect("vehicleTravels.vehiculo", "vehiculo")
+    .leftJoinAndSelect("vehiculo.modelos", "modelos") 
     .leftJoinAndSelect("v.userTravels", "userTravels")
     .leftJoinAndSelect("userTravels.user", "user")
     .leftJoinAndSelect("v.infoviajes", "infoviajes")
@@ -33,10 +35,18 @@ export const getAllViajes = async ({ page, limit }) => {
 export const getViajeById = async (id) => {
 
 
-  const viaje = await viajesRepository.findOne({
-    where: { id },
-    relations: ["reserva", "presupuestos","rutas", "infoviajes"],
-  });
+  const viaje = await viajesRepository
+  .createQueryBuilder("v")
+  .leftJoinAndSelect("v.presupuestos", "presupuestos")
+  .leftJoinAndSelect("v.rutas", "rutas")
+  .leftJoinAndSelect("v.vehicleTravels", "vehicleTravels")
+  .leftJoinAndSelect("vehicleTravels.vehiculo", "vehiculo")
+  .leftJoinAndSelect("vehiculo.modelos", "modelos") 
+  .leftJoinAndSelect("v.userTravels", "userTravels")
+  .leftJoinAndSelect("userTravels.user", "user")
+  .leftJoinAndSelect("v.infoviajes", "infoviajes")
+  .where("v.id = :id", { id })
+  .getOne();
 
   if (!viaje) throw new Error("Viaje no encontrado");
 
@@ -48,7 +58,7 @@ export const getViajeById = async (id) => {
 
     vehicleTravelRepository.find({
       where: { viaje: { id } },
-      relations: ["vehiculo"],
+      relations: ["vehiculo", "vehiculo.modelos"],
     }),
 
     userTravelRepository.find({
@@ -88,11 +98,21 @@ export const getViajeById = async (id) => {
     kilometraje: d.destino.kilometraje,
   })),
 
-  vehiculos: vehiculos.map(v => ({
-    id: v.vehiculo.id,
-    tipo: v.vehiculo.tipog,
-    placa: v.vehiculo.placa,
-  })),
+ vehiculos: vehiculos.map(v => {
+  const vehiculo = v.vehiculo;
+
+  return {
+    id: vehiculo.id,
+    tipo: vehiculo.tipog,
+    placa: vehiculo.placa,
+
+    modelos: (vehiculo.modelos || []).map(m => ({
+      id: m.id,
+      kilometraje: Number(m.kilometraje || 0)
+    }))
+  };
+}),
+  
 
   choferes: usuarios
     .filter(u => u.user.tipo === "chofer")

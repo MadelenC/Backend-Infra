@@ -94,7 +94,13 @@ export const Mechanics = new EntitySchema({
       type: "one-to-many",
       target: "Returns",
       inverseSide: "mecanico",
-    }
+    },
+
+    kilomecanicos: {
+      type: "one-to-many",
+      target: "kilomecanicos",
+      inverseSide: "mecanico",
+    },
   },
 });
 
