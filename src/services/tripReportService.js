@@ -70,7 +70,6 @@ export const getTripReportById = async (id) => {
 };
 
 export const createFullTripReport = async (data) => {
-  console.log("🔥 INICIO createFullTripReport");
   console.log("DATA:", data);
   console.log("VIAJE ID:", data.viaje, typeof data.viaje);
 
@@ -82,7 +81,7 @@ export const createFullTripReport = async (data) => {
     throw new Error("Viaje no encontrado");
   }
 
-  // 🧠 ENTITY COMPLETO Y SEGURO
+ 
   const informe = tripReportRepository.create({
     vehiculo: data.vehiculo,
     chofer: data.chofer,
@@ -118,7 +117,7 @@ export const createFullTripReport = async (data) => {
 
     descripe: data.descripe || "",
 
-    // 🔥 AQUÍ ESTABA EL BUG
+
     montope: toNumber(data.montope),
     montoim: toNumber(data.montoim),
     totalpeim: toNumber(data.totalpeim),
@@ -136,10 +135,10 @@ export const createFullTripReport = async (data) => {
     updated_at: new Date(),
   });
 
-  // guardar informe
+
   const savedInforme = await tripReportRepository.save(informe);
 
-  // relación intermedia
+ 
   const infoviaje = infoviajeRepository.create({
     viaje: travel,
     informe: savedInforme,
@@ -149,27 +148,17 @@ export const createFullTripReport = async (data) => {
 
   await infoviajeRepository.save(infoviaje);
 
-  // 🔥 CALCULOS KILOMETRAJE
+
 
 const kmPartida = toNumber(data.kilopartida);
-
-// lo que recorrió el chofer
-const kmRecorrido = toNumber(data.kilollegada);
-
-// nuevo kilometraje total del vehículo
-const kmTotal = kmPartida + kmRecorrido;
-
-
-// 🔥 REGISTRAR EN KILOMEINFORMES
-
+const kmLlegada = toNumber(data.kilollegada);
+const kmRecorrido = kmLlegada - kmPartida;
+const kmTotal = kmLlegada;
 const nuevoKmInforme = kilomeinformesRepository.create({
-
   hay: kmPartida,
-
-  // kilómetros recorridos
   aumento: kmRecorrido,
 
-  // nuevo total
+
   total: kmTotal,
 
   informeviaje: {
@@ -179,15 +168,16 @@ const nuevoKmInforme = kilomeinformesRepository.create({
   vehiculo: {
     id: data.vehiculo,
   },
+
   created_at: new Date(),
-    updated_at: new Date(),
+  updated_at: new Date(),
 
 });
 
 await kilomeinformesRepository.save(nuevoKmInforme);
 
 
-//ACTUALIZAR KILOMETRAJE ACTUAL DEL VEHICULO
+
 
 const vehiculoActual = await vehicleRepository.findOne({
   where: {
@@ -196,7 +186,7 @@ const vehiculoActual = await vehicleRepository.findOne({
   relations: ["modelos"],
 });
 
-const modeloActual = vehiculoActual.modelos?.[0];
+const modeloActual = vehiculoActual?.modelos?.[0];
 
 if (modeloActual) {
 

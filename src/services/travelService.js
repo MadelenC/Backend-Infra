@@ -19,6 +19,7 @@ export const getAllViajes = async ({ page, limit }) => {
     .leftJoinAndSelect("v.userTravels", "userTravels")
     .leftJoinAndSelect("userTravels.user", "user")
     .leftJoinAndSelect("v.infoviajes", "infoviajes")
+    .orderBy("vehiculo.id", "ASC")
     .orderBy("v.id", "DESC")
     .skip((page - 1) * limit)
     .take(limit);
@@ -162,7 +163,7 @@ export const getViajeById = async (id) => {
 };
 
 
-console.log("🧠 CONEXIÓN ACTIVA:");
+console.log("CONEXIÓN ACTIVA:");
 console.log("DB:", viajesRepository.manager.connection.options.database);
 console.log("HOST:", viajesRepository.manager.connection.options.host);
 
@@ -189,7 +190,7 @@ export const createFullViaje = async (data) => {
     });
 
     const viajeGuardado = await viajesRepository.save(nuevoViaje);
-    console.log("🚗 VIAJE GUARDADO:", viajeGuardado);
+    console.log("VIAJE GUARDADO:", viajeGuardado);
 
 
     await rutasRepository.save({
@@ -235,7 +236,7 @@ export const createFullViaje = async (data) => {
 
           console.log("DESTINO INSERTADO:", result);
         } catch (err) {
-          console.error("❌ ERROR DESTINO:", err);
+          console.error("ERROR DESTINO:", err);
         }
       }
     }
@@ -249,9 +250,9 @@ export const createFullViaje = async (data) => {
             vehiculo: { id: v.id },
           });
 
-          console.log("✅ VEHICULO INSERTADO:", result);
+          console.log("VEHICULO INSERTADO:", result);
         } catch (err) {
-          console.error("❌ ERROR VEHICULO:", err);
+          console.error(" ERROR VEHICULO:", err);
         }
       }
     }
@@ -292,6 +293,15 @@ export const updateFullViaje = async (id, data) => {
     throw new Error("Viaje no encontrado");
   }
 
+  //al momento de actuakizar se eliminara
+  await budgetsRepository.delete({
+  viaje: { id }
+});
+
+await infoviajeRepository.delete({
+  viaje: { id }
+});
+
 
 
   viajesRepository.merge(viaje, {
@@ -302,7 +312,8 @@ export const updateFullViaje = async (id, data) => {
     pasajeros: data.pasajeros,
     fecha_inicial: data.fecha_inicial,
     fecha_final: data.fecha_final,
-    estado: data.estado, 
+    
+    estado: "activo", 
     created_at: new Date(),
     updated_at: new Date(),
   });
