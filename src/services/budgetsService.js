@@ -24,7 +24,12 @@ if (search) {
 }
 
   // PAGINACIÓN
-  query.skip((page - 1) * limit).take(limit);
+  page = Number(page) || 1;
+limit = Number(limit) || 8;
+
+const skip = (page - 1) * limit;
+
+query.skip(skip).take(limit);
 
   const [budgets, total] = await query.getManyAndCount();
 

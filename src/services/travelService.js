@@ -173,7 +173,7 @@ console.log("HOST:", viajesRepository.manager.connection.options.host);
 
 export const createFullViaje = async (data) => {
   try {
-    console.log("📥 DATA RECIBIDA:", data);
+    console.log("DATA RECIBIDA:", data);
 
     
     const nuevoViaje = viajesRepository.create({
@@ -266,9 +266,9 @@ export const createFullViaje = async (data) => {
             user: { id: u.id },
           });
 
-          console.log("✅ USUARIO INSERTADO:", result);
+          console.log("USUARIO INSERTADO:", result);
         } catch (err) {
-          console.error("❌ ERROR USUARIO:", err);
+          console.error(" ERROR USUARIO:", err);
         }
       }
     }
