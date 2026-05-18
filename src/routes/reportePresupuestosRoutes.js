@@ -1,15 +1,14 @@
-import { Router }
-from "express";
+import { Router } from "express";
 
 import {
-  getReportePresupuestos
+
+  getReportePresupuestoById
 } from "../controllers/reportePresupuestosController.js";
 
 const router = Router();
 
-router.get(
-  "/reporte",
-  getReportePresupuestos
-);
+
+
+router.get("/reporte/:id", getReportePresupuestoById);
 
 export default router;
