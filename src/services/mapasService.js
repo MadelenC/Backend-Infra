@@ -6,7 +6,7 @@ export const getAllMapas = async ({ page , limit, search  }) => {
     .leftJoinAndSelect("m.user", "user")
     .orderBy("m.id", "DESC");
 
-  // SEARCH (opcional)
+
   if (search) {
     query.andWhere(
       "m.titulo LIKE :search OR user.destino LIKE :search",
@@ -14,7 +14,7 @@ export const getAllMapas = async ({ page , limit, search  }) => {
     );
   }
 
-  // PAGINACIÓN
+
   query.skip((page - 1) * limit).take(limit);
 
   const [data, total] = await query.getManyAndCount();

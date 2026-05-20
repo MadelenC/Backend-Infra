@@ -25,7 +25,7 @@ export const createSalida = async (data) => {
   try {
     console.log("📩 DATA RECIBIDA:", data);
 
-    // Buscar vehículo
+    
     const vehiculo = await vehicleRepository.findOne({
       where: { id: Number(data.vehiculo) },
     });
@@ -36,7 +36,7 @@ export const createSalida = async (data) => {
       throw new Error(`Vehículo con ID ${data.vehiculo} no existe`);
     }
 
-    //  Buscar chofer
+    
     const chofer = await userRepository.findOne({
       where: { id: Number(data.chofer) },
     });
@@ -95,7 +95,7 @@ export const updateSalida = async (id, data) => {
       salida.vehiculo = vehiculo;
     }
 
-    // Chofer
+
     if (data.chofer) {
       const chofer = await userRepository.findOne({
         where: { id: Number(data.chofer) },
@@ -108,7 +108,7 @@ export const updateSalida = async (id, data) => {
       salida.chofer = chofer;
     }
 
-    // Campos normales
+  
     salida.lugar = data.lugar ?? salida.lugar;
     salida.motivo = data.motivo ?? salida.motivo;
     salida.responsable = data.responsable ?? salida.responsable;
@@ -127,7 +127,7 @@ export const updateSalida = async (id, data) => {
   }
 };
 
-// 🔹 Eliminar salida
+
 export const deleteSalida = async (id) => {
   const salida = await departuresRepository.findOne({
     where: { id },

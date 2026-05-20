@@ -34,6 +34,9 @@
   import reportespdfRoutes from "./routes/reportespdfRoutes.js";
   import reporteUsuariosRoutes from "./routes/reporteUsuariosRoutes.js" 
   import reportePresupuestosRoutes from "./routes/reportePresupuestosRoutes.js"
+  import reporteSalidasRoutes from "./routes/reporteSalidaRoutes.js"
+
+  import dashboardRoutes from "./routes/dashboardRoutes.js"
  
   
   dotenv.config();
@@ -82,6 +85,8 @@
  app.use("/api", reportespdfRoutes);//para el reporte de vehiulos 
  app.use("/api",reporteUsuariosRoutes);
  app.use("/api", reportePresupuestosRoutes);
+ app.use("/api/dashboard", dashboardRoutes);
+ app.use("/api",reporteSalidasRoutes)
 
   export default app;
 

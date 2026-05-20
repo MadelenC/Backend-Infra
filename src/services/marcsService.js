@@ -1,14 +1,13 @@
 import { marcasRepository } from "../repositories/marcsRepository.js";
 import { modelosRepository } from "../repositories/modelsRepository.js";
 
-// Traer todas las marcas (con modelo relacionado)
+
 export const getAllMarcas = async () => {
   return await marcasRepository.find({
     relations: ["modelo"],
   });
 };
 
-// Traer una marca por ID (con modelo)
 export const getMarcaById = async (id) => {
   const marca = await marcasRepository.findOne({
     where: { id },
@@ -19,9 +18,9 @@ export const getMarcaById = async (id) => {
   return marca;
 };
 
-// Crear una nueva marca con relación a un modelo
+
 export const createMarca = async (data) => {
-  // Buscar el modelo para la relación
+  
   const modelo = await modelosRepository.findOneBy({
     id: data.modelo_id,
   });
@@ -43,7 +42,7 @@ export const createMarca = async (data) => {
   return await marcasRepository.save(newMarca);
 };
 
-// Actualizar marca existente
+
 export const updateMarca = async (id, data) => {
   const marca = await marcasRepository.findOne({
     where: { id },

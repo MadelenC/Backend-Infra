@@ -2,7 +2,13 @@ import * as returnsService from "../services/returnsService.js";
 
 export const getReturns = async (req, res) => {
   try {
-    const data = await returnsService.getAllReturns();
+    const { page = 1, limit = 10 } = req.query;
+
+    const data = await returnsService.getAllReturns({
+      page: Number(page),
+      limit: Number(limit),
+    });
+
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });

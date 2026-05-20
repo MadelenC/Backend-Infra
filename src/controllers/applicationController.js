@@ -3,8 +3,16 @@ import * as applicationService from "../services/applicationService.js";
 
 export const getApplications = async (req, res) => {
   try {
-    const data = await applicationService.getAllApplications();
-    res.json(data);
+    const { page, limit, chofer, vehiculoId } = req.query;
+
+    const result = await applicationService.getAllApplications({
+      page: Number(page) || 1,
+      limit: Number(limit) || 8,
+      chofer: chofer || "",
+      vehiculoId: vehiculoId || "",
+    });
+
+    res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

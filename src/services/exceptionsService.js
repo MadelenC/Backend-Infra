@@ -3,14 +3,13 @@
 import { exceptionsRepository } from "../repositories/exceptionsRepository.js";
 import { rolTravelRepository } from "../repositories/rolTravelRepository.js";
 
-// 🔹 Traer todas
+
 export const getAllExceptions = async () => {
   return await exceptionsRepository.find({
     relations: ["rol"],
   });
 };
 
-// 🔹 Traer por ID
 export const getExceptionById = async (id) => {
   const exception = await exceptionsRepository.findOne({
     where: { id },
@@ -23,14 +22,14 @@ export const getExceptionById = async (id) => {
 
 export const createException = async (data) => {
   try {
-    console.log("📩 DATA RECIBIDA:", data);
+    console.log("DATA RECIBIDA:", data);
 
-    // Buscar rolTravel (FK)
+   
     const rol = await rolTravelRepository.findOne({
       where: { id: Number(data.rol_id) },
     });
 
-    console.log("📌 ROL ENCONTRADO:", rol);
+    console.log(" ROL ENCONTRADO:", rol);
 
     if (!rol) {
       throw new Error(`Rol con ID ${data.rol_id} no existe`);
@@ -49,17 +48,15 @@ export const createException = async (data) => {
 
     const guardado = await exceptionsRepository.save(nueva);
 
-    console.log("✅ EXCEPCIÓN GUARDADA:", guardado);
-
     return guardado;
 
   } catch (error) {
-    console.error("❌ ERROR EN createException:", error.message);
+    console.error("ERROR EN createException:", error.message);
     throw error;
   }
 };
 
-// 🔹 Actualizar
+
 export const updateException = async (id, data) => {
   try {
     const exception = await exceptionsRepository.findOne({
@@ -69,7 +66,7 @@ export const updateException = async (id, data) => {
 
     if (!exception) throw new Error("Excepción no encontrada");
 
-    // 🔄 actualizar rol
+
     if (data.rol_id) {
       const rol = await rolTravelRepository.findOne({
         where: { id: Number(data.rol_id) },
@@ -82,7 +79,7 @@ export const updateException = async (id, data) => {
       exception.rol = rol;
     }
 
-    // 🔄 campos
+
     exception.chofer_id = data.chofer_id ?? exception.chofer_id;
     exception.tipo = data.tipo ?? exception.tipo;
     exception.lugar = data.lugar ?? exception.lugar;
@@ -98,7 +95,7 @@ export const updateException = async (id, data) => {
   }
 };
 
-// 🔹 Eliminar
+
 export const deleteException = async (id) => {
   const exception = await exceptionsRepository.findOne({
     where: { id },

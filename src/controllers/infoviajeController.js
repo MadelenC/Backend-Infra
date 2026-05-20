@@ -4,18 +4,17 @@ import * as infoviajeService from "../services/infoviajeService.js";
 // Obtener todos
 export const getInfoviajes = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10, search = "" } = req.query;
 
     const data = await infoviajeService.getAllInfoviajes({
       page: Number(page),
       limit: Number(limit),
+      search,
     });
 
     res.json(data);
   } catch (err) {
-    res.status(500).json({
-      error: err.message,
-    });
+    res.status(500).json({ error: err.message });
   }
 };
 

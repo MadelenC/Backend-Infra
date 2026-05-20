@@ -1,10 +1,41 @@
 import { applicationRepository } from "../repositories/applicationRepository.js";
 import { vehicleRepository } from "../repositories/vehicleRepository.js";
 import { accessoriesRepository } from "../repositories/accessoriesRepository.js";
-export const getAllApplications = async () => {
-  return await applicationRepository.find({
-    relations: ["vehiculo","accesorios"],
-  });
+export const getAllApplications = async ({
+  page = 1,
+  limit = 8,
+  chofer = "",
+  vehiculoId = "",
+}) => {
+  const skip = (page - 1) * limit;
+
+  const query = applicationRepository
+    .createQueryBuilder("app")
+    .leftJoinAndSelect("app.vehiculo", "vehiculo")
+    .leftJoinAndSelect("app.accesorios", "accesorios")
+    .orderBy("app.id", "DESC");
+
+  
+  if (chofer) {
+   query.andWhere("app.chofer LIKE :chofer", { chofer: `%${chofer}%` });
+  }
+
+
+  if (vehiculoId) {
+    query.andWhere("vehiculo.id = :vehiculoId", { vehiculoId });
+  }
+
+  const [data, total] = await query
+    .skip(skip)
+    .take(limit)
+    .getManyAndCount();
+
+  return {
+    data,
+    total,
+    totalPages: Math.ceil(total / limit),
+    page,
+  };
 };
 
 export const getApplicationById = async (id) => {
@@ -39,7 +70,7 @@ export const createApplication = async (data) => {
       })
     );
 
-    //  ACCESORIOS EXISTENTES
+ 
     if (Array.isArray(data.accesorio_ids)) {
       for (const id of data.accesorio_ids) {
         const acc = await accessoriesRepository.findOneBy({ id });
@@ -57,7 +88,6 @@ export const createApplication = async (data) => {
       }
     }
 
-    //para  NUEVOS ACCESORIOS
     if (Array.isArray(data.nuevos_accesorios)) {
       for (const nombre of data.nuevos_accesorios) {
         await accessoriesRepository.save(
@@ -74,7 +104,7 @@ export const createApplication = async (data) => {
     return saved;
 
   } catch (error) {
-    console.error("🔥 ERROR CREATE APPLICATION:", error);
+    console.error("ERROR CREATE APPLICATION:", error);
     throw error;
   }
 };

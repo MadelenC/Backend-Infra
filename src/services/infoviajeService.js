@@ -4,21 +4,33 @@ import { infoviajeRepository } from "../repositories/infoviajeRepository.js";
 export const getAllInfoviajes = async ({
   page = 1,
   limit = 10,
+  search = "",
 }) => {
-  const [data, total] = await infoviajeRepository.findAndCount({
-    relations: ["viaje"],
-    skip: (page - 1) * limit,
-    take: limit,
-  });
+
+  const qb = infoviajeRepository
+    .createQueryBuilder("infoviaje")
+    .leftJoinAndSelect("infoviaje.viaje", "viaje")
+    .orderBy("infoviaje.id", "DESC");
+
+  if (search) {
+    qb.where("viaje.nombre ILIKE :search", {
+      search: `%${search}%`,
+    });
+  }
+
+  const [data, total] = await qb
+    .skip((Number(page) - 1) * Number(limit))
+    .take(Number(limit))
+    .getManyAndCount();
 
   return {
     data,
     total,
-    page,
-    limit,
+    page: Number(page),
+    limit: Number(limit),
+    totalPages: Math.ceil(total / limit),
   };
 };
-
 export const getInfoviajeById = async (id) => {
   const infoviaje = await infoviajeRepository.findOne({
     where: { id },

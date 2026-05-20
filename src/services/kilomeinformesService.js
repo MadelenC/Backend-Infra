@@ -1,7 +1,7 @@
 import { kilomeinformesRepository } from "../repositories/kilomeinformesRepository.js";
 
 
-// OBTENER TODOS
+
 export const getAllKilomeinformes = async () => {
   return await kilomeinformesRepository.find({
     relations: ["informeviaje", "vehiculo"],
@@ -9,7 +9,6 @@ export const getAllKilomeinformes = async () => {
 };
 
 
-// OBTENER POR ID
 export const getKilomeinformeById = async (id) => {
   const data = await kilomeinformesRepository.findOne({
     where: { id },
@@ -24,7 +23,7 @@ export const getKilomeinformeById = async (id) => {
 };
 
 
-// CREAR
+
 export const createKilomeinforme = async (data) => {
 
   const nuevo = kilomeinformesRepository.create({

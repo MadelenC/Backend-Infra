@@ -1,14 +1,13 @@
 // src/services/institutionService.js
 import { institutionRepository } from "../repositories/institutionRepository.js";
 
-// Obtener todas las instituciones
+
 export const getAllInstitutions = async () => {
   return await institutionRepository.find({
     relations: ["maintenances"], 
   });
 };
 
-// Obtener por ID
 export const getInstitutionById = async (id) => {
   const institution = await institutionRepository.findOne({
     where: { id },
@@ -18,7 +17,7 @@ export const getInstitutionById = async (id) => {
   return institution;
 };
 
-// Crear
+
 export const createInstitution = async (data) => {
   const nuevo = institutionRepository.create({
     nombre: data.nombre,

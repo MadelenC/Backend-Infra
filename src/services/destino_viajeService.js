@@ -3,7 +3,7 @@ import { destinoViajeRepository } from "../repositories/destino_viajeRepository.
 
 export const getAllDestinoViajes = async () => {
   return await destinoViajeRepository.find({
-    relations: ["destino", "viaje"], // importante
+    relations: ["destino", "viaje"], 
   });
 };
 

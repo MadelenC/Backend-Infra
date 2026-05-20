@@ -65,7 +65,6 @@ export const Viajes = new EntitySchema({
       },
       nullable: true,                         
     },
-    
     presupuestos: {
       type: "one-to-many",
       target: "Presupuestos",
@@ -97,7 +96,6 @@ export const Viajes = new EntitySchema({
     target: "infoviaje",
     inverseSide: "viaje",
   },
-
-    
+  
   },
 });
