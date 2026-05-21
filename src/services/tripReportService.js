@@ -5,6 +5,7 @@ import { tripReportRepository } from "../repositories/tripReportRepository.js";
 import { viajesRepository } from "../repositories/travelRepository.js";
 import { kilomeinformesRepository } from "../repositories/kilomeinformesRepository.js";
 import { modelosRepository } from "../repositories/modelsRepository.js";
+import { informedeboluRepository }from "../repositories/informedeboluRepository.js";
 
 const toNumber = (v) => Number(v || 0);
 
@@ -16,6 +17,7 @@ export const getAllTripReports = async ({
   const query = tripReportRepository
     .createQueryBuilder("t")
      .leftJoinAndSelect("t.kilomeinformes", "km")
+     .leftJoinAndSelect("t.informesdebolu", "devolucion")
     .orderBy("t.id", "DESC");
 
   if (search) {
@@ -60,13 +62,44 @@ export const getAllTripReports = async ({
 };
 
 export const getTripReportById = async (id) => {
-  const report = await tripReportRepository.findOneBy({ id });
+ const report =
+  await tripReportRepository.findOne({
+
+    where: { id },
+
+    relations: [
+      "kilomeinformes",
+      "informesdebolu",
+    ],
+
+  });
 
   if (!report) {
     throw new Error("Informe de viaje no encontrado");
   }
 
-  return report;
+
+  const users = await userRepository.find();
+  const vehicles = await vehicleRepository.find();
+
+  const vehiculo = vehicles.find(
+    (v) => Number(v.id) === Number(report.vehiculo)
+  );
+
+  const chofer = users.find(
+    (u) => Number(u.id) === Number(report.chofer)
+  );
+
+  const encargado = users.find(
+    (u) => Number(u.id) === Number(report.encargado)
+  );
+
+  return {
+    ...report,
+    vehiculo,
+    chofer,
+    encargado,
+  };
 };
 
 export const createFullTripReport = async (data) => {
@@ -122,11 +155,6 @@ export const createFullTripReport = async (data) => {
     montoim: toNumber(data.montoim),
     totalpeim: toNumber(data.totalpeim),
 
-    combus: toNumber(data.combus),
-    peaje: toNumber(data.peaje),
-    impre: toNumber(data.impre),
-    totalcopeim: toNumber(data.totalcopeim),
-
     delegacion: data.delegacion || "",
     descripmante: data.descripmante || "",
     recomendacion: data.recomendacion || "",
@@ -137,6 +165,25 @@ export const createFullTripReport = async (data) => {
 
 
   const savedInforme = await tripReportRepository.save(informe);
+
+  const devolucion =
+  informedeboluRepository.create({
+
+    combus: toNumber(data.combus),
+
+    peaje: toNumber(data.peaje),
+
+    impre: toNumber(data.impre),
+
+    totalcopeim: toNumber(data.totalcopeim),
+
+    informeviaje: {
+      id: savedInforme.id,
+    },
+
+  });
+
+await informedeboluRepository.save(devolucion);
 
  
   const infoviaje = infoviajeRepository.create({

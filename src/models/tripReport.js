@@ -201,5 +201,11 @@ export const tripReport = new EntitySchema({
       inverseSide: "informeviaje",
     },
 
+    informesdebolu: {
+    type: "one-to-many",
+    target: "Informedebolu",
+    inverseSide: "informeviaje",
+  },
+
   },
 });

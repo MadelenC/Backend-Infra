@@ -30,6 +30,7 @@
   import infoviajeRoutes from "./routes/infoviajeRoutes.js";
   import kilomeinformes from "./routes/kilomeinformesRoutes.js";
   import kilomecanicos from "./routes/institutionRoutes.js";
+  import  InformedeboluRoutes from "./routes/informedeboluRoutes.js";
 
   import reportespdfRoutes from "./routes/reportespdfRoutes.js";
   import reporteUsuariosRoutes from "./routes/reporteUsuariosRoutes.js" 
@@ -81,6 +82,7 @@
   app.use("/api/infoviaje", infoviajeRoutes );
   app.use("/api/kilomeinformes", kilomeinformes );
   app.use("/api/kilomecanicos", kilomecanicos );
+  app.use("/api/informedebolu", InformedeboluRoutes );
   //Reportes pdf
  app.use("/api", reportespdfRoutes);//para el reporte de vehiulos 
  app.use("/api",reporteUsuariosRoutes);
