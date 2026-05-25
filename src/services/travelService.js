@@ -185,6 +185,9 @@ export const createFullViaje = async (data) => {
       fecha_inicial: data.fecha_inicial,
       fecha_final: data.fecha_final,
       estado: data.estado || "activo",
+      reserva: data.reserva_id
+    ? { id: data.reserva_id }
+    : null,
       created_at: new Date(),
       updated_at: new Date(),
     });
