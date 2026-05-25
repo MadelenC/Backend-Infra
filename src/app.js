@@ -36,6 +36,7 @@
   import reporteUsuariosRoutes from "./routes/reporteUsuariosRoutes.js" 
   import reportePresupuestosRoutes from "./routes/reportePresupuestosRoutes.js"
   import reporteSalidasRoutes from "./routes/reporteSalidaRoutes.js"
+  import vehicles_combustibleRoutes from "./routes/vehicles_combustibleRoutes.js"
 
   import dashboardRoutes from "./routes/dashboardRoutes.js"
  
@@ -83,12 +84,15 @@
   app.use("/api/kilomeinformes", kilomeinformes );
   app.use("/api/kilomecanicos", kilomecanicos );
   app.use("/api/informedebolu", InformedeboluRoutes );
+  //
   //Reportes pdf
  app.use("/api", reportespdfRoutes);//para el reporte de vehiulos 
  app.use("/api",reporteUsuariosRoutes);
  app.use("/api", reportePresupuestosRoutes);
  app.use("/api/dashboard", dashboardRoutes);
- app.use("/api",reporteSalidasRoutes)
+ app.use("/api",reporteSalidasRoutes);
+ //rutas para informe vehiculo y combustible
+ app.use("/api/vehiculos-combustible", vehicles_combustibleRoutes);
 
   export default app;
 

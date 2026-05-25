@@ -14,12 +14,12 @@ export const getAllDestinos = async ({ page, limit, departamento, search }) => {
   }
 
 
-  if (search) {
-    query.andWhere(
-      "d.origen LIKE :search OR d.destino LIKE :search OR d.ruta LIKE :search",
-      { search: `%${search}%` }
-    );
-  }
+ if (search) {
+  query.andWhere(
+    `(d.origen LIKE :search OR d.destino LIKE :search OR d.ruta LIKE :search)`,
+    { search: `%${search}%` }
+  );
+}
 
 
   query.skip((page - 1) * limit).take(limit);

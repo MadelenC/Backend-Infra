@@ -13,7 +13,6 @@ export const getAllBudgets = async ({
     .leftJoinAndSelect("b.viaje", "viaje")
     .orderBy("b.id", "DESC");
 
-   // SEARCH
 if (search) {
   query.andWhere(
     `b.entidad LIKE :search`,
@@ -23,7 +22,7 @@ if (search) {
   );
 }
 
-  // PAGINACIÓN
+
   page = Number(page) || 1;
 limit = Number(limit) || 8;
 

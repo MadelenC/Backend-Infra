@@ -1,13 +1,13 @@
-// src/controllers/applicationController.js
 import * as applicationService from "../services/applicationService.js";
 
 export const getApplications = async (req, res) => {
   try {
-    const { page, limit, chofer, vehiculoId } = req.query;
+    const { page, limit,search, chofer, vehiculoId } = req.query;
 
     const result = await applicationService.getAllApplications({
       page: Number(page) || 1,
       limit: Number(limit) || 8,
+      search: search || "",
       chofer: chofer || "",
       vehiculoId: vehiculoId || "",
     });

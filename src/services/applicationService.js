@@ -6,6 +6,7 @@ export const getAllApplications = async ({
   limit = 8,
   chofer = "",
   vehiculoId = "",
+    search = "",
 }) => {
   const skip = (page - 1) * limit;
 
@@ -16,14 +17,20 @@ export const getAllApplications = async ({
     .orderBy("app.id", "DESC");
 
   
-  if (chofer) {
-   query.andWhere("app.chofer LIKE :chofer", { chofer: `%${chofer}%` });
-  }
+      if (chofer) {
+        query.andWhere("app.chofer LIKE :chofer", { chofer: `%${chofer}%` });
+      }
 
+      if (vehiculoId) {
+        query.andWhere("vehiculo.id = :vehiculoId", { vehiculoId });
+      }
 
-  if (vehiculoId) {
-    query.andWhere("vehiculo.id = :vehiculoId", { vehiculoId });
-  }
+      if (search) {
+        query.andWhere(
+          `(app.descripsoli LIKE :search OR app.chofer LIKE :search)`,
+          { search: `%${search}%` }
+        );
+      }
 
   const [data, total] = await query
     .skip(skip)
