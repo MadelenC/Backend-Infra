@@ -13,6 +13,7 @@ export const getAllApplications = async ({
   const query = applicationRepository
     .createQueryBuilder("app")
     .leftJoinAndSelect("app.vehiculo", "vehiculo")
+    .leftJoinAndSelect("vehiculo.modelos", "modelos")
     .leftJoinAndSelect("app.accesorios", "accesorios")
     .orderBy("app.id", "DESC");
 
@@ -48,7 +49,7 @@ export const getAllApplications = async ({
 export const getApplicationById = async (id) => {
   const application = await applicationRepository.findOne({
     where: { id },
-    relations: ["vehiculo","accesorios"],
+    relations: ["vehiculo","accesorios", "vehiculo.modelos"],
   });
 
   if (!application) throw new Error("Solicitud no encontrada");
