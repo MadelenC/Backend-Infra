@@ -30,6 +30,15 @@ export const Informedebolu = new EntitySchema({
       type: "varchar",
       nullable: true,
     },
+    created_at: {
+      type: "timestamp",
+      default: () => "CURRENT_TIMESTAMP",
+    },
+    // updated_at
+    updated_at: {
+      type: "timestamp",
+      default: () => "CURRENT_TIMESTAMP",
+    },
   },
 
   relations: {

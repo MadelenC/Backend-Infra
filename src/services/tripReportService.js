@@ -176,6 +176,8 @@ export const createFullTripReport = async (data) => {
     impre: toNumber(data.impre),
 
     totalcopeim: toNumber(data.totalcopeim),
+     created_at: new Date(),
+    updated_at: new Date(),
 
     informeviaje: {
       id: savedInforme.id,
