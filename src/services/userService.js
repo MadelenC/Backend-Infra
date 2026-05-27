@@ -40,6 +40,7 @@ export const getAllUsers = async ({ page, limit, search, role }) => {
     email: u.email,
     cargo: u.cargo,
     insertador: u.insertador,
+    active: u.active,
 
     
     entidades: u.entidades?.map(e => ({
@@ -59,7 +60,7 @@ export const getAllUsers = async ({ page, limit, search, role }) => {
     totalPages: Math.ceil(total / limit),
   };
 };
-// GET USER BY ID
+
 export const getUserById = async (id) => {
   return await userRepository.findOne({
     where: { id },
@@ -67,16 +68,14 @@ export const getUserById = async (id) => {
   });
 };
 
-// CREATE USER (SEGURIDAD + INSERTADOR)
+
 export const createUser = async (data) => {
   try {
     const payload = { ...data };
 
-    // limpiar opcionales
     if (!payload.email) delete payload.email;
     if (!payload.cargo) delete payload.cargo;
 
-    // ENCRIPTAR PASSWORD
     const hashedPassword = await bcrypt.hash(payload.password, 10);
 
     const userAdd = {
@@ -86,19 +85,17 @@ export const createUser = async (data) => {
       celular: payload.celular,
       email: payload.email,
       tipo: payload.tipo,
-
-      
       insertador: payload.insertador || "DESCONOCIDO",
-
-      
       password: hashedPassword,
 
       cargo: payload.cargo,
+       active: true,
       created_at: new Date(),
       updated_at: new Date(),
     };
 
     const user = userRepository.create(userAdd);
+  
     return await userRepository.save(user);
 
   } catch (err) {
@@ -271,4 +268,26 @@ export const deleteUser = async (id) => {
   await userRepository.save(user);
 
   return { message: "Contraseña actualizada correctamente" };
+};
+
+
+export const toggleUserStatus = async (id) => {
+  const user = await userRepository.findOneBy({ id });
+
+  if (!user) {
+    throw {
+      status: 404,
+      message: "Usuario no encontrado",
+    };
+  }
+
+  user.active = !user.active;
+  user.updated_at = new Date();
+
+  await userRepository.save(user);
+
+  return {
+    id: user.id,
+    active: user.active,
+  };
 };

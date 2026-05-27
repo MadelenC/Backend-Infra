@@ -60,11 +60,11 @@ export const deleteUser = async (req, res) => {
 };
 
 
- // 🔐 CAMBIAR CONTRASEÑA (NUEVO)
+
 export const changePassword = async (req, res) => {
   try {
     const result = await userService.changePassword(
-      req.params.id,   // 👈 AQUÍ el fix
+      req.params.id,   
       req.body
     );
 
@@ -73,5 +73,29 @@ export const changePassword = async (req, res) => {
     res.status(err.status || 500).json({
       message: err.message,
     });
+  }
+};
+
+export const changeUserStatus = async (req, res) => {
+  try {
+
+    const result = await userService.toggleUserStatus(
+      req.params.id
+    );
+
+    res.json({
+      ok: true,
+      data: result,
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(err.status || 500).json({
+      ok: false,
+      message: err.message,
+    });
+
   }
 };
