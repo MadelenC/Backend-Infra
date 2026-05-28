@@ -48,6 +48,8 @@ export const createDestino = async (data) => {
     ruta: data.ruta,
     kilometraje: data.kilometraje,
     tiempo: data.tiempo,
+    created_at: new Date(),
+     updated_at: new Date(),
   });
 
   return await destinoRepository.save(nuevo);

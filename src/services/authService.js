@@ -28,44 +28,37 @@ export const authService = {
   },
 
   login: async ({ cedula, password }) => {
-    if (!cedula || !password) throw new Error('Ci and password are required');
+  if (!cedula || !password) {
+    throw new Error('Ci and password are required');
+  }
 
-    const user = await userRepository.findOneBy({ cedula });
-    
-    if (!user) throw new Error('Invalid Ci or password');
+  const user = await userRepository.findOneBy({
+    cedula: cedula.trim(),
+  });
 
+  if (!user) {
+    throw new Error('Invalid Ci or password');
+  }
 
-    //no valido
-    // console.log("USER COMPLETO DESDE BD:", JSON.stringify(user, null, 2));
+  const validPassword = await bcrypt.compare(
+    password,
+    user.password
+  );
 
+  if (!validPassword) {
+    throw new Error('Invalid Ci or password');
+  }
 
-    // try {
-    //   if( user.password.startsWith('$2a$') ||
-    //       user.password.startsWith('$2b$') ||
-    //       user.password.startsWith('$2y$') 
-    //     ) {
-    //     validPassword=password===user.password;
-    //   }else{
-    //       validPassword= password === user.password;
-    //       if (validPassword){
-    //         const hashedPassword= await bcrypt.hash(password, 10);
-    //         user.password=hashedPassword;
-    //         await userRepository.save(user);
-    //         console.log('Password de usuario actualizado a hash bcrypt')
-    //       }
-    //     }
-    // } catch (error) {
-    //   validPassword=password===user.password;
-    // }
-    // console.log("RESULTADO DE COMPARE:", validPassword); //vnkjgf
-    //novalido
-    const token = jwt.sign({ id: user.id, cedula: user.cedula }, SECRET_KEY, {
-      expiresIn: '1h',
-    });
+  const token = jwt.sign(
+    { id: user.id, cedula: user.cedula },
+    SECRET_KEY,
+    { expiresIn: '1h' }
+  );
 
-    const { password: _, ...userWithoutPassword } = user;
-    return { user: userWithoutPassword, token };
-  },
+  const { password: _, ...userWithoutPassword } = user;
+
+  return { user: userWithoutPassword, token };
+},
   //prueba de que algunas contraseñas no funcionan
   //login: async ({ cedula, password }) => {
 
