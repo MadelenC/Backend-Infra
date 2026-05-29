@@ -274,3 +274,39 @@ export const deleteTripReport = async (id) => {
 
   return await tripReportRepository.remove(report);
 };
+
+
+export const getTripReportsByDriver = async ({
+  userId,
+  page = 1,
+  limit = 8,
+}) => {
+  const query = tripReportRepository
+    .createQueryBuilder("t")
+    .leftJoinAndSelect("t.kilomeinformes", "km")
+    .leftJoinAndSelect("t.informesdebolu", "devolucion")
+    .where("t.chofer = :userId", {
+      userId: String(userId).trim(),
+    })
+    .orderBy("t.id", "DESC")
+    .skip((page - 1) * limit)
+    .take(limit);
+
+  const [trips, total] = await query.getManyAndCount();
+
+  const users = await userRepository.find();
+  const vehicles = await vehicleRepository.find();
+
+  const data = trips.map((t) => ({
+    ...t,
+    vehiculo: vehicles.find(v => v.id === Number(t.vehiculo)),
+    chofer: users.find(u => u.id === Number(t.chofer)),
+    encargado: users.find(u => u.id === Number(t.encargado)),
+  }));
+
+  return {
+    data,
+    total,
+    totalPages: Math.ceil(total / limit),
+  };
+};

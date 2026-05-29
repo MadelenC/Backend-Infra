@@ -9,10 +9,12 @@ import {
  
 } from "../controllers/travelController.js";
 
+import { authenticate } from "../middlewares/authMiddleware.js";
+
 const router = Router();
 
 
-router.get("/", getViajes);             
+router.get("/",authenticate, getViajes);             
 router.get("/:id", getViajeById);       
 router.post("/", createFullViaje);     
 router.put("/:id", updateFullViaje);    

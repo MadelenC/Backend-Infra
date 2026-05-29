@@ -26,6 +26,10 @@ export const login = async (req, res) => {
 
     
     const { user, token } = await authService.login(req.body);
+
+    console.log("controller LOGIN:::" ,user)
+    console.log("TOKEN LOGIN:::" ,token)
+
     res.status(200).json({ user, token });
   } catch (err) {
     res.status(401).json({ message: err.message });

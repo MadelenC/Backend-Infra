@@ -79,3 +79,24 @@ export const deleteTripReport = async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+
+export const getMyDriverReports = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const reports = await tripReportService.getTripReportsByDriver({
+      userId,
+      page: Number(req.query.page) || 1,
+      limit: Number(req.query.limit) || 8,
+    });
+
+    res.status(200).json(reports);
+
+  } catch (error) {
+    console.error("Error obteniendo informes del chofer:", error);
+
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
