@@ -3,7 +3,16 @@ import * as requestService from "../services/requestService.js";
 
 export const getRequests = async (req, res) => {
   try {
-    const data = await requestService.getAllRequests();
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 8;
+    const search = req.query.search || "";
+
+    const data = await requestService.getAllRequests(
+      page,
+      limit,
+      search
+    );
+
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });

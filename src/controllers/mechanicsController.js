@@ -1,18 +1,42 @@
 
-// src/controllers/mechanicsController.js
 import * as mechanicsService from "../services/mechanicsService.js";
 
-// Get all mechanics
-export const getMechanics = async (req, res) => {
+
+export const getMechanics = async (
+  req,
+  res
+) => {
+
   try {
-    const data = await mechanicsService.getAllMechanics(); // <-- nombre en inglés
+
+    const page =
+      Number(req.query.page) || 1;
+
+    const limit =
+      Number(req.query.limit) || 8;
+
+    const search =
+      req.query.search || "";
+
+    const data =
+      await mechanicsService.getAllMechanics({
+        page,
+        limit,
+        search,
+      });
+
     res.json(data);
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    res.status(500).json({
+      error: err.message,
+    });
+
   }
 };
 
-// Get mechanic by ID
+
 export const getMechanicById = async (req, res) => {
   try {
     const mechanic = await mechanicsService.getMechanicById(
@@ -24,7 +48,7 @@ export const getMechanicById = async (req, res) => {
   }
 };
 
-// Create mechanic
+
 export const createMechanic = async (req, res) => {
   try {
     const newMechanic = await mechanicsService.createMechanic(req.body);
@@ -34,7 +58,7 @@ export const createMechanic = async (req, res) => {
   }
 };
 
-// Update mechanic
+
 export const updateMechanic = async (req, res) => {
   try {
     const updatedMechanic = await mechanicsService.updateMechanic(
@@ -47,7 +71,7 @@ export const updateMechanic = async (req, res) => {
   }
 };
 
-// Delete mechanic
+
 export const deleteMechanic = async (req, res) => {
   try {
     await mechanicsService.deleteMechanic(Number(req.params.id));

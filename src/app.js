@@ -56,6 +56,7 @@
 
   app.use("/api/users", userRoutes);
   app.use("/api/auth", authRoutes); 
+  app.use("/uploads", express.static("uploads"));
   app.use("/api/entidades", entidadesRoutes);
   app.use("/api/rolTravel", rolTravelRoutes);
   app.use("/api/vehicle", vehicleRoutes); 

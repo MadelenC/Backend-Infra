@@ -39,6 +39,7 @@ export const getAllUsers = async ({ page, limit, search, role }) => {
     celular: u.celular,
     email: u.email,
     cargo: u.cargo,
+    avatar: u.avatar,
     insertador: u.insertador,
     active: u.active,
 
@@ -89,6 +90,7 @@ export const createUser = async (data) => {
       password: hashedPassword,
 
       cargo: payload.cargo,
+      avatar: payload.avatar || null,
        active: true,
       created_at: new Date(),
       updated_at: new Date(),
@@ -194,6 +196,7 @@ export const updateUser = async (id, data) => {
       celular: updatedUser.celular,
       email: updatedUser.email,
       cargo: updatedUser.cargo,
+      avatar: updatedUser.avatar,
       insertador: updatedUser.insertador,
 
       entidades: updatedUser.entidades?.map(e => ({
@@ -268,6 +271,29 @@ export const deleteUser = async (id) => {
   await userRepository.save(user);
 
   return { message: "Contraseña actualizada correctamente" };
+};
+
+export const updateAvatar = async (id, avatarUrl) => {
+
+  const user = await userRepository.findOne({
+    where: { id },
+  });
+
+  if (!user) {
+    throw {
+      status: 404,
+      message: "Usuario no encontrado",
+    };
+  }
+
+  user.avatar = avatarUrl;
+  user.updated_at = new Date();
+
+  await userRepository.save(user);
+
+  return {
+    avatar: user.avatar,
+  };
 };
 
 

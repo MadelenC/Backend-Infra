@@ -37,6 +37,10 @@ export const User = new EntitySchema({
       type: "varchar", 
       //unique: true, // 🔑 campo necesario para login
     },
+     avatar: {
+      type: "varchar",
+      nullable: true,
+    },
     insertador: {
       type: "varchar",
       default: "NO"

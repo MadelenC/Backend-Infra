@@ -1,14 +1,44 @@
 // src/services/requestService.js
 import { requestRepository } from "../repositories/requestRepository.js";
 
-export const getAllRequests = async () => {
+export const getAllRequests = async (
+  page = 1,
+  limit = 8,
+  search = ""
+) => {
   try {
-    return await requestRepository.find({
-      relations: ["solicitud","solicitud.vehiculo"],
-      order: { id: "DESC" },
-    });
+    const query = requestRepository
+      .createQueryBuilder("r")
+      .leftJoinAndSelect("r.solicitud", "solicitud")
+      .leftJoinAndSelect("solicitud.vehiculo", "vehiculo")
+      .orderBy("r.id", "DESC");
+
+  
+    if (search) {
+      query.andWhere(
+        "LOWER(r.justificacion) LIKE LOWER(:search)",
+        {
+          search: `%${search}%`,
+        }
+      );
+    }
+
+ 
+    query.skip((page - 1) * limit).take(limit);
+
+    const [data, total] = await query.getManyAndCount();
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   } catch (error) {
-    throw new Error("Error al obtener requests: " + error.message);
+    throw new Error(
+      "Error al obtener requests: " + error.message
+    );
   }
 };
 
