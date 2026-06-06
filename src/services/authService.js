@@ -40,6 +40,10 @@ export const authService = {
     throw new Error('Invalid Ci or password');
   }
 
+  if (!user.active) {
+  throw new Error("Usuario inactivo. Contacte al administrador.");
+}
+
   const validPassword = await bcrypt.compare(
     password,
     user.password
