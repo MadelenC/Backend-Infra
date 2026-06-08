@@ -44,6 +44,10 @@ export const authService = {
   throw new Error("Usuario inactivo. Contacte al administrador.");
 }
 
+if (user.tipo === "ninguno") {
+  throw new Error("Usuario sin tipo asignado. Contacte al administrador.");
+}
+
   const validPassword = await bcrypt.compare(
     password,
     user.password

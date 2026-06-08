@@ -70,50 +70,85 @@ export const getUserById = async (id) => {
 };
 
 
+
+
 export const createUser = async (data) => {
   try {
     const payload = { ...data };
+    const cedula = payload.cedula?.toString().trim();
+    console.log("👉 CEDULA NORMALIZADA:", cedula);
+
+    // VALIDAR CÉDULA DUPLICADA SIEMPRE EN BD
+    const existingUser = await userRepository.findOne({
+    where: { cedula },
+  });
+
+    if (existingUser) {
+      throw {
+        status: 400,
+        message: "La cédula ya está registrada",
+      };
+    }
 
     if (!payload.email) delete payload.email;
     if (!payload.cargo) delete payload.cargo;
 
-    const hashedPassword = await bcrypt.hash(payload.password, 10);
+    const hashedPassword = await bcrypt.hash(
+      payload.password,
+      10
+    );
 
     const userAdd = {
       nombres: payload.nombres,
       apellidos: payload.apellidos,
-      cedula: payload.cedula,
+      cedula,
       celular: payload.celular,
       email: payload.email,
       tipo: payload.tipo,
-      insertador: payload.insertador || "DESCONOCIDO",
+      insertador:
+        payload.insertador || "DESCONOCIDO",
       password: hashedPassword,
-
       cargo: payload.cargo,
       avatar: payload.avatar || null,
-       active: true,
+      active: true,
       created_at: new Date(),
       updated_at: new Date(),
     };
 
     const user = userRepository.create(userAdd);
-  
+
     return await userRepository.save(user);
 
   } catch (err) {
-    console.error("Error al crear usuario:", err);
 
-    if (err.code === "23505") {
-      throw new Error(
-        "Ya existe un usuario con algún dato único duplicado (cedula, celular o email)."
-      );
+    console.error(
+      "Error al crear usuario:",
+      err
+    );
+
+    // ERROR PERSONALIZADO
+    if (err.status) {
+      throw err;
     }
 
-    throw new Error("No se pudo crear el usuario. Verifique los datos.");
+    // ERROR UNIQUE POSTGRES
+    if (err.code === "23505") {
+      throw {
+        status: 400,
+        message:
+          "La cédula ya está registrada",
+      };
+    }
+
+    throw {
+      status: 500,
+      message:
+        "No se pudo crear el usuario",
+    };
   }
 };
 
-//  UPDATE USER
+
 export const updateUser = async (id, data) => {
   try {
     console.log("📥 DATA QUE LLEGA:", data);

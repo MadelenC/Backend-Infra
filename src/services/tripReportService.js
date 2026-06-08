@@ -281,13 +281,18 @@ export const getTripReportsByDriver = async ({
   page = 1,
   limit = 8,
 }) => {
+    console.log("USER ID RECIBIDO:", userId);
+  console.log("TIPO:", typeof userId);
   const query = tripReportRepository
     .createQueryBuilder("t")
     .leftJoinAndSelect("t.kilomeinformes", "km")
     .leftJoinAndSelect("t.informesdebolu", "devolucion")
     .where("t.chofer = :userId", {
+      
       userId: String(userId).trim(),
+      
     })
+    
     .orderBy("t.id", "DESC")
     .skip((page - 1) * limit)
     .take(limit);
