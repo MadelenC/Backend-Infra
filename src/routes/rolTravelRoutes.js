@@ -7,13 +7,14 @@ import {
   updateRolTravel,
   deleteRolTravel,
 } from "../controllers/rolTravelController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getRolTravel);          
-router.get("/:id", getRolTravelById);  
-router.post("/", createRolTravel);      
-router.put("/:id", updateRolTravel);   
-router.delete("/:id", deleteRolTravel);
+router.get("/", authenticate, getRolTravel);          
+router.get("/:id",authenticate,  getRolTravelById);  
+router.post("/",authenticate,  createRolTravel);      
+router.put("/:id", authenticate, updateRolTravel);   
+router.delete("/:id", authenticate, deleteRolTravel);
 
 export default router;

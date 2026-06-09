@@ -7,13 +7,14 @@ import {
   updateInstitution,
   deleteInstitution,
 } from "../controllers/institutionController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getInstitutions);
-router.get("/:id", getInstitutionById);
-router.post("/", createInstitution);
-router.put("/:id", updateInstitution);
-router.delete("/:id", deleteInstitution);
+router.get("/", authenticate, getInstitutions);
+router.get("/:id",authenticate,  getInstitutionById);
+router.post("/",authenticate,  createInstitution);
+router.put("/:id",authenticate,  updateInstitution);
+router.delete("/:id", authenticate, deleteInstitution);
 
 export default router;

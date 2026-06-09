@@ -7,13 +7,14 @@ import {
   updateBudget,
   deleteBudget,
 } from "../controllers/budgetsController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getBudgets);            
-router.get("/:id", getBudgetById);      
-router.post("/", createBudget);         
-router.put("/:id", updateBudget);       
-router.delete("/:id", deleteBudget);    
+router.get("/",authenticate, getBudgets);            
+router.get("/:id",authenticate, getBudgetById);      
+router.post("/", authenticate, createBudget);         
+router.put("/:id", authenticate, updateBudget);       
+router.delete("/:id", authenticate,deleteBudget);    
 
 export default router;

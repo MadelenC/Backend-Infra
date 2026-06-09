@@ -6,15 +6,16 @@ import {
   createKilomeinforme,
   deleteKilomeinforme,
 } from "../controllers/kilomeinformesController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getKilomeinformes);
+router.get("/",authenticate,  getKilomeinformes);
 
-router.get("/:id", getKilomeinformeById);
+router.get("/:id", authenticate, getKilomeinformeById);
 
-router.post("/", createKilomeinforme);
+router.post("/", authenticate, createKilomeinforme);
 
-router.delete("/:id", deleteKilomeinforme);
+router.delete("/:id",authenticate,  deleteKilomeinforme);
 
 export default router;

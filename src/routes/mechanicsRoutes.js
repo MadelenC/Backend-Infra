@@ -8,14 +8,15 @@ import {
   updateMechanic,
   deleteMechanic,
 } from "../controllers/mechanicsController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getMechanics);
-router.get("/:id", getMechanicById);
-router.post("/", createMechanic);
-router.put("/:id", updateMechanic);
-router.delete("/:id", deleteMechanic);
+router.get("/",authenticate,  getMechanics);
+router.get("/:id", authenticate, getMechanicById);
+router.post("/",authenticate, createMechanic);
+router.put("/:id", authenticate, updateMechanic);
+router.delete("/:id", authenticate, deleteMechanic);
 
 export default router;
 

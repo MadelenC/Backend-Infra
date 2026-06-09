@@ -6,15 +6,16 @@ import {
   createKilomecanico,
   deleteKilomecanico,
 } from "../controllers/kilomecanicosController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getKilomecanicos);
+router.get("/", authenticate, getKilomecanicos);
 
-router.get("/:id", getKilomecanicoById);
+router.get("/:id",authenticate,  getKilomecanicoById);
 
-router.post("/", createKilomecanico);
+router.post("/", authenticate, createKilomecanico);
 
-router.delete("/:id", deleteKilomecanico);
+router.delete("/:id", authenticate, deleteKilomecanico);
 
 export default router;

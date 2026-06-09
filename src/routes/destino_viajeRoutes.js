@@ -6,12 +6,13 @@ import {
   createDestinoViaje,
   deleteDestinoViaje,
 } from "../controllers/destino_viajeController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getDestinoViajes);
-router.get("/:id", getDestinoViajeById);
-router.post("/", createDestinoViaje);
-router.delete("/:id", deleteDestinoViaje);
+router.get("/", authenticate, getDestinoViajes);
+router.get("/:id",authenticate,  getDestinoViajeById);
+router.post("/", authenticate, createDestinoViaje);
+router.delete("/:id",authenticate,  deleteDestinoViaje);
 
 export default router;

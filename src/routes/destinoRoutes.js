@@ -7,13 +7,14 @@ import {
   updateDestino,
   deleteDestino,
 } from "../controllers/destinoController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getDestinos);
-router.get("/:id", getDestinoById);
-router.post("/", createDestino);
-router.put("/:id", updateDestino);
-router.delete("/:id", deleteDestino);
+router.get("/", authenticate,  getDestinos);
+router.get("/:id",authenticate, getDestinoById);
+router.post("/",authenticate,  createDestino);
+router.put("/:id",authenticate,  updateDestino);
+router.delete("/:id",authenticate,  deleteDestino);
 
 export default router;

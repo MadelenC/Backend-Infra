@@ -8,17 +8,14 @@ import {
   updateInfoviaje,
   deleteInfoviaje,
 } from "../controllers/infoviajeController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getInfoviajes);
-
-router.get("/:id", getInfoviajeById);
-
-router.post("/", createInfoviaje);
-
-router.put("/:id", updateInfoviaje);
-
-router.delete("/:id", deleteInfoviaje);
+router.get("/",authenticate,  getInfoviajes);
+router.get("/:id",authenticate,  getInfoviajeById);
+router.post("/",authenticate,  createInfoviaje);
+router.put("/:id", authenticate, updateInfoviaje);
+router.delete("/:id",authenticate,  deleteInfoviaje);
 
 export default router;

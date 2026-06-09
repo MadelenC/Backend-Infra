@@ -12,12 +12,12 @@ import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getTripReports);
+router.get("/",authenticate, getTripReports);
 router.get("/my-driver-reports",authenticate,getMyDriverReports);
-router.get("/:id", getTripReportById);
-router.post("/", createTripReport);
-router.put("/:id", updateTripReport);
-router.delete("/:id", deleteTripReport);
+router.get("/:id",authenticate,  getTripReportById);
+router.post("/", authenticate, createTripReport);
+router.put("/:id",authenticate,  updateTripReport);
+router.delete("/:id", authenticate, deleteTripReport);
 
 
 export default router;

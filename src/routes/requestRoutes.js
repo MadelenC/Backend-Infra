@@ -7,13 +7,14 @@ import {
   updateRequest,
   deleteRequest,
 } from "../controllers/requestController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getRequests);
-router.get("/:id", getRequestById);
-router.post("/", createRequest);
-router.put("/:id", updateRequest);
-router.delete("/:id", deleteRequest);
+router.get("/",authenticate,  getRequests);
+router.get("/:id", authenticate, getRequestById);
+router.post("/", authenticate, createRequest);
+router.put("/:id",authenticate,  updateRequest);
+router.delete("/:id",authenticate,  deleteRequest);
 
 export default router;

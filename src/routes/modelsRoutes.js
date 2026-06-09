@@ -6,13 +6,14 @@ import {
   updateModelo,
   deleteModelo,
 } from "../controllers/modelsController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getModelos);          
-router.get("/:id", getModeloById);    
-router.post("/", createModelo);       
-router.put("/:id", updateModelo);     
-router.delete("/:id", deleteModelo);  
+router.get("/", authenticate, getModelos);          
+router.get("/:id",authenticate,  getModeloById);    
+router.post("/", authenticate, createModelo);       
+router.put("/:id",authenticate,  updateModelo);     
+router.delete("/:id", authenticate, deleteModelo);  
 
 export default router;

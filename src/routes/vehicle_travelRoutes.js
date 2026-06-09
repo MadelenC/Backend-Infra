@@ -6,12 +6,13 @@ import {
   createVehicleTravel,
   deleteVehicleTravel,
 } from "../controllers/vehicle_travelController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getVehicleTravels);
-router.get("/:id", getVehicleTravelById);
-router.post("/", createVehicleTravel);
-router.delete("/:id", deleteVehicleTravel);
+router.get("/", authenticate,getVehicleTravels);
+router.get("/:id",authenticate,getVehicleTravelById);
+router.post("/",authenticate, createVehicleTravel);
+router.delete("/:id",authenticate, deleteVehicleTravel);
 
 export default router;

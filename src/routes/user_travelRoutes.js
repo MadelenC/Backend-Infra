@@ -6,12 +6,13 @@ import {
   createUserTravel,
   deleteUserTravel,
 } from "../controllers/user_travelController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getUserTravels);
-router.get("/:id", getUserTravelById);
-router.post("/", createUserTravel);
-router.delete("/:id", deleteUserTravel);
+router.get("/",authenticate,  getUserTravels);
+router.get("/:id",authenticate,  getUserTravelById);
+router.post("/", authenticate, createUserTravel);
+router.delete("/:id",authenticate, deleteUserTravel);
 
 export default router;

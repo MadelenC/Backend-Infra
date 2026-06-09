@@ -15,10 +15,10 @@ const router = Router();
 
 
 router.get("/",authenticate, getViajes);             
-router.get("/:id", getViajeById);       
-router.post("/", createFullViaje);     
-router.put("/:id", updateFullViaje);    
-router.delete("/:id", deleteFullViaje); 
-router.patch("/:id/cancelar", cancelViajeController);
+router.get("/:id",authenticate,  getViajeById);       
+router.post("/", authenticate, createFullViaje);     
+router.put("/:id",authenticate,  updateFullViaje);    
+router.delete("/:id",authenticate,  deleteFullViaje); 
+router.patch("/:id/cancelar",authenticate,  cancelViajeController);
 
 export default router;

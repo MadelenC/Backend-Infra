@@ -7,13 +7,14 @@ import {
   updateAccessory,
   deleteAccessory,
 } from "../controllers/accessoriesController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getAccessories);
-router.get("/:id", getAccessoryById);
-router.post("/", createAccessory);
-router.put("/:id", updateAccessory);
-router.delete("/:id", deleteAccessory);
+router.get("/", authenticate,getAccessories);
+router.get("/:id",authenticate, getAccessoryById);
+router.post("/",authenticate, createAccessory);
+router.put("/:id", authenticate,updateAccessory);
+router.delete("/:id", authenticate,deleteAccessory);
 
 export default router;

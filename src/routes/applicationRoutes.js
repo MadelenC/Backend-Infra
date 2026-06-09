@@ -7,13 +7,13 @@ import {
   updateApplication,
   deleteApplication,
 } from "../controllers/applicationController.js";
-
+import { authenticate } from "../middlewares/authMiddleware.js";
 const router = Router();
 
-router.get("/", getApplications);
-router.get("/:id", getApplicationById);
-router.post("/", createApplication);
-router.put("/:id", updateApplication);
-router.delete("/:id", deleteApplication);
+router.get("/",  authenticate, getApplications);
+router.get("/:id", authenticate,getApplicationById);
+router.post("/", authenticate,createApplication);
+router.put("/:id", authenticate,updateApplication);
+router.delete("/:id",authenticate, deleteApplication);
 
 export default router;

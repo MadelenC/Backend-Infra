@@ -6,14 +6,15 @@ import {
   updateVehicle,
   deleteVehicle,
 } from "../controllers/vehicleController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
 // Rutas para vehículos
-router.get("/", getVehicles);          // Obtener todos los vehículos
-router.get("/:id", getVehicleById);   // Obtener un vehículo por ID
-router.post("/", createVehicle);      // Crear un nuevo vehículo
-router.put("/:id", updateVehicle);    // Actualizar un vehículo existente
-router.delete("/:id", deleteVehicle); // Eliminar un vehículo
+router.get("/", authenticate,getVehicles);          // Obtener todos los vehículos
+router.get("/:id", authenticate,getVehicleById);   // Obtener un vehículo por ID
+router.post("/", authenticate,createVehicle);      // Crear un nuevo vehículo
+router.put("/:id", authenticate,updateVehicle);    // Actualizar un vehículo existente
+router.delete("/:id", authenticate,deleteVehicle); // Eliminar un vehículo
 
 export default router;
