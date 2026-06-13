@@ -49,6 +49,7 @@ export const getResumenVehiculos = async ({ estado }) => {
     .addSelect("mo.tipoe", "modelo")
     .addSelect("mo.modelo", "anioModelo")
     .addSelect("COALESCE(MAX(mo.kilometraje), 0)", "kmViajes")
+    .addSelect("COALESCE(MAX(mo.km_ultimo_mantenimiento), 0)", "kmUltimoMantenimiento")
     .addSelect("ma.marca", "marca")
     .addSelect("COUNT(DISTINCT vi.id)", "cantidadViajes")
     .addSelect("COUNT(DISTINCT km.id)", "cantidadMantenimientos")
@@ -80,6 +81,18 @@ export const getResumenVehiculos = async ({ estado }) => {
     const litros = Number(item.litrosCombustible || 0);
     const gasto = Number(item.gastoCombustible || 0);
     const kmViajes = Number(item.kmViajes || 0);
+    const kmUltimoMantenimiento = Number(
+      item.kmUltimoMantenimiento || 0
+    );
+
+  const kmRecorridos =
+      kmViajes - kmUltimoMantenimiento;
+  const limite =
+    item.combustible === "Gasolina"
+      ? 5000
+      : 8000;
+  const necesitaMantenimiento =
+  kmRecorridos >= limite;
 
     return {
       ...item,
@@ -88,6 +101,10 @@ export const getResumenVehiculos = async ({ estado }) => {
       litrosCombustible: litros,
       gastoCombustible: gasto,
       kmViajes,
+      kmUltimoMantenimiento,
+      kmRecorridos,
+      limite,
+      necesitaMantenimiento,
       kmMecanicos: Number(item.kmMecanicos || 0),
       consumoPorKm: kmViajes > 0 ? Number((litros / kmViajes).toFixed(2)) : 0,
       costoPorKm: kmViajes > 0 ? Number((gasto / kmViajes).toFixed(2)) : 0,
@@ -95,3 +112,33 @@ export const getResumenVehiculos = async ({ estado }) => {
   });
 };
 
+export const getCombustibleMensual = async (year) => {
+  const data = await vehicleRepository.manager
+    .createQueryBuilder()
+    .from("presupuestos", "p")
+
+    .where("EXTRACT(YEAR FROM p.fecha_sa) = :year", { year })
+
+    .leftJoin("viajes", "v", "v.id = p.viaje_id")
+    .leftJoin("vehiculo_viaje", "vv", "vv.viaje_id = v.id")
+    .leftJoin("vehiculos", "ve", "ve.id = vv.vehiculo_id")
+
+    .select("EXTRACT(MONTH FROM p.fecha_sa)", "mes")
+    .addSelect("ve.combustible", "combustible")
+
+    .addSelect(
+      "SUM(CAST(NULLIF(TRIM(p.cantidad1), '') AS NUMERIC))",
+      "litros"
+    )
+    .addSelect(
+      "SUM(CAST(NULLIF(TRIM(p.total1C), '') AS NUMERIC))",
+      "gasto"
+    )
+
+    .groupBy("mes")
+    .addGroupBy("ve.combustible")
+    .orderBy("mes", "ASC")
+    .getRawMany();
+
+  return data;
+};

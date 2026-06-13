@@ -33,3 +33,17 @@ export const getResumenVehiculosCombustible = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const getCombustibleMensual = async (req, res) => {
+  try {
+    const { year } = req.query;
+
+    const data = await vehicleService.getCombustibleMensual(
+      year || new Date().getFullYear()
+    );
+
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

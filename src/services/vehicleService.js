@@ -155,6 +155,35 @@ export const updateVehicle = async (id, data) => {
   return updatedVehicle;
 };
 
+export const registrarCambioAceite = async (vehicleId) => {
+  const vehicle = await vehicleRepository.findOne({
+    where: { id: vehicleId },
+    relations: ["modelos"],
+  });
+
+  if (!vehicle) {
+    throw new Error("Vehículo no encontrado");
+  }
+
+  const modelo = vehicle.modelos?.[0];
+
+  if (!modelo) {
+    throw new Error("Modelo no encontrado");
+  }
+
+  // guardar kilometraje actual
+  modelo.km_ultimo_mantenimiento = modelo.kilometraje;
+
+  modelo.updated_at = new Date();
+
+  await modelosRepository.save(modelo);
+
+  return {
+    ok: true,
+    message: "Cambio de aceite registrado",
+  };
+};
+
 export const deleteVehicle = async (id) => {
   const vehicle = await vehicleRepository.findOne({
     where: { id },

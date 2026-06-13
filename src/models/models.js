@@ -21,6 +21,11 @@ export const Modelos = new EntitySchema({
       type: "double precision",
       nullable: false,
     },
+    km_ultimo_mantenimiento: {
+      type: "double precision",
+      nullable: false,
+      default: 0,
+    },
     created_at: {
       type: "timestamp",
       default: () => "CURRENT_TIMESTAMP",

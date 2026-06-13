@@ -50,6 +50,7 @@ export const updateVehicle = async (req, res) => {
   }
 };
 
+
 // Eliminar vehículo
 export const deleteVehicle = async (req, res) => {
   try {
@@ -57,5 +58,24 @@ export const deleteVehicle = async (req, res) => {
     res.json({ message: "Vehículo eliminado" });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+export const registrarCambioAceite = async (req, res) => {
+  try {
+
+    const result =
+      await vehicleService.registrarCambioAceite(
+        Number(req.params.id)
+      );
+
+    res.json(result);
+
+  } catch (err) {
+
+    res.status(500).json({
+      error: err.message,
+    });
+
   }
 };
