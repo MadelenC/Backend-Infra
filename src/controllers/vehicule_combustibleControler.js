@@ -36,14 +36,24 @@ export const getResumenVehiculosCombustible = async (req, res) => {
 
 export const getCombustibleMensual = async (req, res) => {
   try {
-    const { year } = req.query;
+    const year = Number(req.query.year) || new Date().getFullYear();
 
-    const data = await vehicleService.getCombustibleMensual(
-      year || new Date().getFullYear()
-    );
+    const data = await vehicleService.getCombustibleMensual(year);
 
-    res.json(data);
+    return res.json(data);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("ERROR combustible mensual:", err);
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+export const getCombustibleAnual = async (req, res) => {
+  try {
+    const data = await vehicleService.getCombustibleAnual();
+
+    return res.json(data);
+  } catch (err) {
+    console.error("ERROR combustible anual:", err);
+    return res.status(500).json({ error: err.message });
   }
 };

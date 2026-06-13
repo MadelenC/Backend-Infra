@@ -117,7 +117,10 @@ export const getCombustibleMensual = async (year) => {
     .createQueryBuilder()
     .from("presupuestos", "p")
 
-    .where("EXTRACT(YEAR FROM p.fecha_sa) = :year", { year })
+    .where("p.fecha_sa >= :start AND p.fecha_sa < :end", {
+      start: `${year}-01-01`,
+      end: `${year + 1}-01-01`,
+    })
 
     .leftJoin("viajes", "v", "v.id = p.viaje_id")
     .leftJoin("vehiculo_viaje", "vv", "vv.viaje_id = v.id")
@@ -138,6 +141,37 @@ export const getCombustibleMensual = async (year) => {
     .groupBy("mes")
     .addGroupBy("ve.combustible")
     .orderBy("mes", "ASC")
+    .getRawMany();
+
+  return data;
+};
+
+export const getCombustibleAnual = async () => {
+  const data = await vehicleRepository.manager
+    .createQueryBuilder()
+    .from("presupuestos", "p")
+
+    .leftJoin("viajes", "v", "v.id = p.viaje_id")
+    .leftJoin("vehiculo_viaje", "vv", "vv.viaje_id = v.id")
+    .leftJoin("vehiculos", "ve", "ve.id = vv.vehiculo_id")
+
+    .select("EXTRACT(YEAR FROM p.fecha_sa)", "anio")
+    .addSelect("ve.combustible", "combustible")
+
+    .addSelect(
+      "SUM(CAST(NULLIF(TRIM(p.cantidad1), '') AS NUMERIC))",
+      "litros"
+    )
+
+    .addSelect(
+      "SUM(CAST(NULLIF(TRIM(p.total1C), '') AS NUMERIC))",
+      "gasto"
+    )
+
+    .groupBy("anio")
+    .addGroupBy("ve.combustible")
+    .orderBy("anio", "ASC")
+
     .getRawMany();
 
   return data;
