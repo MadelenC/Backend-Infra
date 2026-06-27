@@ -37,8 +37,14 @@ export const getResumenVehiculosCombustible = async (req, res) => {
 export const getCombustibleMensual = async (req, res) => {
   try {
     const year = Number(req.query.year) || new Date().getFullYear();
+    const { placa, fechaInicio, fechaFin } = req.query;
 
-    const data = await vehicleService.getCombustibleMensual(year);
+    const data = await vehicleService.getCombustibleMensual({
+      year,
+      placa,
+      fechaInicio,
+      fechaFin,
+    });
 
     return res.json(data);
   } catch (err) {
@@ -49,7 +55,15 @@ export const getCombustibleMensual = async (req, res) => {
 
 export const getCombustibleAnual = async (req, res) => {
   try {
-    const data = await vehicleService.getCombustibleAnual();
+    const year = Number(req.query.year) || new Date().getFullYear();
+    const { placa, fechaInicio, fechaFin } = req.query;
+
+    const data = await vehicleService.getCombustibleAnual({
+      year,
+      placa,
+      fechaInicio,
+      fechaFin,
+    });
 
     return res.json(data);
   } catch (err) {

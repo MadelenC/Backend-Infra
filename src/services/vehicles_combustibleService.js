@@ -112,21 +112,32 @@ export const getResumenVehiculos = async ({ estado }) => {
   });
 };
 
-export const getCombustibleMensual = async (year) => {
-  const data = await vehicleRepository.manager
+export const getCombustibleMensual = async ({
+  year,
+  placa,
+  fechaInicio,
+  fechaFin,
+} = {}) => {
+  const selectedYear = Number(year) || new Date().getFullYear();
+  const start = fechaInicio || `${selectedYear}-01-01`;
+  const end = fechaFin || `${selectedYear + 1}-01-01`;
+
+  const query = vehicleRepository.manager
     .createQueryBuilder()
     .from("presupuestos", "p")
 
-    .where("p.fecha_sa >= :start AND p.fecha_sa < :end", {
-      start: `${year}-01-01`,
-      end: `${year + 1}-01-01`,
+    .where(`p.fecha_sa >= :start AND p.fecha_sa ${fechaFin ? "<=" : "<"} :end`, {
+      start,
+      end,
     })
 
-    .leftJoin("viajes", "v", "v.id = p.viaje_id")
-    .leftJoin("vehiculo_viaje", "vv", "vv.viaje_id = v.id")
-    .leftJoin("vehiculos", "ve", "ve.id = vv.vehiculo_id")
+    .leftJoin("vehiculos", "ve", "ve.id = p.vehiculo")
 
     .select("EXTRACT(MONTH FROM p.fecha_sa)", "mes")
+    .addSelect("ve.id", "vehiculoId")
+    .addSelect("ve.codigo", "codigo")
+    .addSelect("ve.placa", "placa")
+    .addSelect("ve.tipog", "tipo")
     .addSelect("ve.combustible", "combustible")
 
     .addSelect(
@@ -139,23 +150,50 @@ export const getCombustibleMensual = async (year) => {
     )
 
     .groupBy("mes")
+    .addGroupBy("ve.id")
+    .addGroupBy("ve.codigo")
+    .addGroupBy("ve.placa")
+    .addGroupBy("ve.tipog")
     .addGroupBy("ve.combustible")
-    .orderBy("mes", "ASC")
-    .getRawMany();
+    .orderBy("mes", "ASC");
+
+  if (placa) {
+    query.andWhere("CAST(ve.placa AS TEXT) ILIKE :placa", {
+      placa: `%${placa}%`,
+    });
+  }
+
+  const data = await query.getRawMany();
 
   return data;
 };
 
-export const getCombustibleAnual = async () => {
-  const data = await vehicleRepository.manager
+export const getCombustibleAnual = async ({
+  year,
+  placa,
+  fechaInicio,
+  fechaFin,
+} = {}) => {
+  const selectedYear = Number(year) || new Date().getFullYear();
+  const start = fechaInicio || `${selectedYear}-01-01`;
+  const end = fechaFin || `${selectedYear + 1}-01-01`;
+
+  const query = vehicleRepository.manager
     .createQueryBuilder()
     .from("presupuestos", "p")
 
-    .leftJoin("viajes", "v", "v.id = p.viaje_id")
-    .leftJoin("vehiculo_viaje", "vv", "vv.viaje_id = v.id")
-    .leftJoin("vehiculos", "ve", "ve.id = vv.vehiculo_id")
+    .leftJoin("vehiculos", "ve", "ve.id = p.vehiculo")
+
+    .where(`p.fecha_sa >= :start AND p.fecha_sa ${fechaFin ? "<=" : "<"} :end`, {
+      start,
+      end,
+    })
 
     .select("EXTRACT(YEAR FROM p.fecha_sa)", "anio")
+    .addSelect("ve.id", "vehiculoId")
+    .addSelect("ve.codigo", "codigo")
+    .addSelect("ve.placa", "placa")
+    .addSelect("ve.tipog", "tipo")
     .addSelect("ve.combustible", "combustible")
 
     .addSelect(
@@ -169,10 +207,20 @@ export const getCombustibleAnual = async () => {
     )
 
     .groupBy("anio")
+    .addGroupBy("ve.id")
+    .addGroupBy("ve.codigo")
+    .addGroupBy("ve.placa")
+    .addGroupBy("ve.tipog")
     .addGroupBy("ve.combustible")
-    .orderBy("anio", "ASC")
+    .orderBy("anio", "ASC");
 
-    .getRawMany();
+  if (placa) {
+    query.andWhere("CAST(ve.placa AS TEXT) ILIKE :placa", {
+      placa: `%${placa}%`,
+    });
+  }
+
+  const data = await query.getRawMany();
 
   return data;
 };
